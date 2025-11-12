@@ -19,7 +19,7 @@ const closeMobileMenu = () => {
       <div class="header-content">
         <!-- Logo -->
         <RouterLink to="/" class="logo" @click="closeMobileMenu">
-          <span class="logo-text">Ebodhak</span>
+          <span class="logo-text">eBodhak</span>
         </RouterLink>
 
         <!-- Desktop Navigation -->

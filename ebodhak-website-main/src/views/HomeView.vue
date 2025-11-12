@@ -161,7 +161,7 @@ const stats = [
 // Testimonials
 const testimonials = [
   {
-    name: 'Sanjay Adhikari',
+    name: 'Abhishek Jha',
     role: 'IOE Entrance Rank 5',
     image: '👨‍🎓',
     content:
@@ -169,7 +169,7 @@ const testimonials = [
     rating: 5,
   },
   {
-    name: 'Anita Gurung',
+    name: 'Abhishek Jha',
     role: 'MBBS Student',
     image: '👩‍⚕️',
     content:
@@ -177,7 +177,7 @@ const testimonials = [
     rating: 5,
   },
   {
-    name: 'Ramesh Karki',
+    name: 'Abhishek Jha',
     role: 'BBA Graduate',
     image: '👨‍💼',
     content:
@@ -185,7 +185,7 @@ const testimonials = [
     rating: 5,
   },
   {
-    name: 'Priya Shrestha',
+    name: 'Abhishek Jha',
     role: 'Computer Science Student',
     image: '👩‍💻',
     content:

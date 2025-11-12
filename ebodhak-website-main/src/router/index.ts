@@ -17,17 +17,23 @@ const router = createRouter({
     {
       path: '/courses',
       name: 'courses',
-      component: () => import('../views/AboutView.vue'), // Placeholder for now
+      component: () => import('../views/CoursesView.vue'),
+    },
+    {
+      path: '/courses/:id',
+      name: 'course-detail',
+      component: () => import('../views/CourseDetailView.vue'),
+      props: true, // Enables passing course ID as prop
     },
     {
       path: '/mock-tests',
       name: 'mock-tests',
-      component: () => import('../views/AboutView.vue'), // Placeholder for now
+      component: () => import('../views/MockTestsView.vue'),
     },
     {
       path: '/pricing',
       name: 'pricing',
-      component: () => import('../views/AboutView.vue'), // Placeholder for now
+      component: () => import('../views/PricingView.vue'),
     },
   ],
   scrollBehavior(to, from, savedPosition) {

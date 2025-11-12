@@ -1,9 +1,9 @@
 <script setup lang="ts">
 const team = [
-  { name: 'Ramesh Adhikari', role: 'Founder & CEO', icon: '👨‍💼' },
-  { name: 'Sunita Karki', role: 'Head of Academics', icon: '👩‍🏫' },
-  { name: 'Bijay Shrestha', role: 'Tech Lead', icon: '👨‍💻' },
-  { name: 'Anita Tamang', role: 'Student Success Manager', icon: '👩‍💼' },
+  { name: 'Abhishek Jha', role: 'Founder & CEO', icon: '👨‍💼' },
+  { name: 'Abhishek Jha', role: 'Head of Academics', icon: '👩‍🏫' },
+  { name: 'Abhishek Jha', role: 'Tech Lead', icon: '👨‍💻' },
+  { name: 'Abhishek Jha', role: 'Student Success Manager', icon: '👩‍💼' },
 ]
 
 const values = [
