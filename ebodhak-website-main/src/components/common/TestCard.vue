@@ -21,7 +21,7 @@ const difficultyColor = {
 
 <template>
   <div
-    class="bg-white rounded-2xl border border-gray-200 hover:border-primary-300 hover:shadow-xl transition-all transform hover:-translate-y-1 p-6"
+    class="bg-white rounded-2xl border border-gray-200 hover:border-primary-300 hover:shadow-xl transition-all transform hover:-translate-y-1 p-6 flex flex-col h-full"
   >
     <div class="flex items-start justify-between mb-4">
       <div class="flex-1">
@@ -35,7 +35,7 @@ const difficultyColor = {
       </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-4 mb-6">
+    <div class="grid grid-cols-2 gap-4 mb-6 flex-grow">
       <div class="flex items-center gap-2 text-gray-600">
         <font-awesome-icon :icon="['fas', 'clipboard-list']" class="text-primary-500" />
         <span class="text-sm">{{ questionCount }} Questions</span>
@@ -55,7 +55,7 @@ const difficultyColor = {
     </div>
 
     <button
-      class="w-full bg-primary-500 hover:bg-primary-600 text-white py-3 rounded-xl font-bold transition transform hover:scale-105"
+      class="w-full bg-primary-500 hover:bg-primary-600 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 mt-auto"
     >
       <font-awesome-icon :icon="['fas', 'play']" class="mr-2" />
       Start Test

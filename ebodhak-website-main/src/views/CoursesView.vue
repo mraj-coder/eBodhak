@@ -1,6 +1,10 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import CourseCard from '../components/common/CourseCard.vue'
+import { useCourses } from '@/composables/useCourses'
+import type { Course } from '@/types/course'
+
+const { courses, loading, error, fetchCourses } = useCourses()
 
 const searchQuery = ref('')
 const selectedCategory = ref('All')
@@ -8,142 +12,63 @@ const selectedLevel = ref('All')
 const selectedPriceRange = ref('All')
 const sortBy = ref('popular')
 
-const categories = ['All', 'Engineering', 'Medical', 'Management', 'IT & CS', 'Science', 'Banking']
+// Extract unique categories from API data
+const categories = computed(() => {
+  const uniqueCategories = new Set(
+    courses.value
+      .map((course) => course.category?.name)
+      .filter((name): name is string => !!name)
+  )
+  return ['All', ...Array.from(uniqueCategories)]
+})
+
 const levels = ['All', 'Beginner', 'Intermediate', 'Advanced']
 const priceRanges = ['All', 'Under Rs. 2000', 'Rs. 2000-5000', 'Above Rs. 5000']
 
-const courses = [
-  {
-    id: '1',
-    title: 'IOE Entrance Preparation - Complete Course',
-    description:
-      'Comprehensive preparation for IOE entrance exam covering Physics, Chemistry, Mathematics, and English',
-    instructor: 'Dr. Ramesh Sharma',
-    price: 4999,
-    rating: 4.8,
-    reviewCount: 245,
-    duration: '120 hours',
-    studentCount: 3200,
-    thumbnail: 'https://images.unsplash.com/photo-1581092335331-5e00ac65e934?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHwxfHxlbmdpbmVlcmluZyUyMGJsdWVwcmludCUyMHRlY2huaWNhbCUyMGdlYXJzfGVufDB8MHx8Ymx1ZXwxNzYyNDA3MTM4fDA&ixlib=rb-4.1.0&q=85',
-    category: 'Engineering',
-    level: 'Intermediate',
-  },
-  {
-    id: '2',
-    title: 'MBBS Entrance Complete Package',
-    description:
-      'Full preparation course for MBBS entrance with Biology, Chemistry, Physics, and English',
-    instructor: 'Dr. Sunita Karki',
-    price: 5999,
-    rating: 4.9,
-    reviewCount: 189,
-    duration: '150 hours',
-    studentCount: 2800,
-    thumbnail: 'https://images.unsplash.com/photo-1659353886508-63654e63eca4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHwxfHxtZWRpY2FsJTIwc3RldGhvc2NvcGUlMjBoZWFsdGhjYXJlJTIwYW5hdG9teXxlbnwwfDB8fHJlZHwxNzYyNDA3MTM3fDA&ixlib=rb-4.1.0&q=85',
-    category: 'Medical',
-    level: 'Advanced',
-  },
-  {
-    id: '3',
-    title: 'MBA Entrance Preparation',
-    description: 'Complete MBA entrance preparation covering Quantitative, Verbal, and Logical Reasoning',
-    instructor: 'Prof. Bijay Shrestha',
-    price: 3999,
-    rating: 4.7,
-    reviewCount: 156,
-    duration: '80 hours',
-    studentCount: 1900,
-    thumbnail: 'https://images.unsplash.com/photo-1496180470114-6ef490f3ff22?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG1lZXRpbmclMjBjaGFydHMlMjBwcm9mZXNzaW9uYWx8ZW58MHwwfHxwdXJwbGV8MTc2MjQwNzEzOHww&ixlib=rb-4.1.0&q=85',
-    category: 'Management',
-    level: 'Intermediate',
-  },
-  {
-    id: '4',
-    title: 'Full Stack Web Development',
-    description: 'Learn modern web development with React, Node.js, MongoDB, and deployment',
-    instructor: 'Er. Prakash Thapa',
-    price: 6999,
-    rating: 4.9,
-    reviewCount: 312,
-    duration: '200 hours',
-    studentCount: 4500,
-    thumbnail: 'https://images.unsplash.com/photo-1675495277087-10598bf7bcd1?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHwxfHxwcm9ncmFtbWluZyUyMGNvZGUlMjBsYXB0b3AlMjB0ZWNobm9sb2d5fGVufDB8MHx8fDE3NjI0MDcxMzh8MA&ixlib=rb-4.1.0&q=85',
-    category: 'IT & CS',
-    level: 'Beginner',
-  },
-  {
-    id: '5',
-    title: 'Data Science & Machine Learning',
-    description: 'Master Python, Statistics, ML algorithms, and real-world data science projects',
-    instructor: 'Dr. Anita Tamang',
-    price: 7999,
-    rating: 4.8,
-    reviewCount: 278,
-    duration: '180 hours',
-    studentCount: 3100,
-    thumbnail: 'https://images.unsplash.com/photo-1542831371-32f555c86880?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHw2fHxwcm9ncmFtbWluZyUyMGNvZGUlMjBsYXB0b3AlMjB0ZWNobm9sb2d5fGVufDB8MHx8fDE3NjI0MDcxMzh8MA&ixlib=rb-4.1.0&q=85',
-    category: 'IT & CS',
-    level: 'Advanced',
-  },
-  {
-    id: '6',
-    title: 'Banking Service Commission Preparation',
-    description: 'Complete preparation for Nepal Rastra Bank and other banking exams',
-    instructor: 'CA Mohan Adhikari',
-    price: 2999,
-    rating: 4.6,
-    reviewCount: 134,
-    duration: '60 hours',
-    studentCount: 1500,
-    thumbnail: 'https://images.unsplash.com/photo-1656337426914-5e5ba162d606?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHwxfHxsYWJvcmF0b3J5JTIwc2NpZW5jZSUyMG1pY3Jvc2NvcGUlMjByZXNlYXJjaHxlbnwwfDB8fHRlYWx8MTc2MjQwNzEzN3ww&ixlib=rb-4.1.0&q=85',
-    category: 'Banking',
-    level: 'Intermediate',
-  },
-  {
-    id: '7',
-    title: 'Physics for Engineering Students',
-    description: 'Advanced physics concepts for engineering entrance and undergraduate studies',
-    instructor: 'Prof. Krishna Bahadur',
-    price: 3499,
-    rating: 4.7,
-    reviewCount: 198,
-    duration: '90 hours',
-    studentCount: 2400,
-    thumbnail: 'https://images.unsplash.com/photo-1656337426914-5e5ba162d606?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHwxfHxsYWJvcmF0b3J5JTIwc2NpZW5jZSUyMG1pY3Jvc2NvcGUlMjByZXNlYXJjaHxlbnwwfDB8fHRlYWx8MTc2MjQwNzEzN3ww&ixlib=rb-4.1.0&q=85',
-    category: 'Science',
-    level: 'Intermediate',
-  },
-  {
-    id: '8',
-    title: 'BBA Foundation Course',
-    description: 'Complete foundation course for BBA entrance and first-year students',
-    instructor: 'Prof. Sita Gurung',
-    price: 2499,
-    rating: 4.5,
-    reviewCount: 112,
-    duration: '70 hours',
-    studentCount: 1800,
-    thumbnail: 'https://images.unsplash.com/photo-1496180470114-6ef490f3ff22?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTAwNDR8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG1lZXRpbmclMjBjaGFydHMlMjBwcm9mZXNzaW9uYWx8ZW58MHwwfHxwdXJwbGV8MTc2MjQwNzEzOHww&ixlib=rb-4.1.0&q=85',
-    category: 'Management',
-    level: 'Beginner',
-  },
-]
+// Helper function to calculate price (you may need to adjust this based on actual pricing logic)
+const getCoursePrice = (course: Course): number => {
+  // This is a placeholder - adjust based on your actual pricing structure
+  // For now, using a simple calculation based on duration
+  return (course.duration_months || 6) * 1000
+}
 
 const filteredCourses = computed(() => {
-  return courses.filter((course) => {
+  let filtered = courses.value.filter((course) => {
     const matchesSearch =
-      course.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      course.description.toLowerCase().includes(searchQuery.value.toLowerCase())
-    const matchesCategory = selectedCategory.value === 'All' || course.category === selectedCategory.value
-    const matchesLevel = selectedLevel.value === 'All' || course.level === selectedLevel.value
+      course.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      (course.description || '').toLowerCase().includes(searchQuery.value.toLowerCase())
+    const matchesCategory =
+      selectedCategory.value === 'All' || course.category?.name === selectedCategory.value
+    const matchesLevel =
+      selectedLevel.value === 'All' ||
+      (course.difficulty_level?.toLowerCase() || 'intermediate') === selectedLevel.value.toLowerCase()
+
+    const price = getCoursePrice(course)
     const matchesPrice =
       selectedPriceRange.value === 'All' ||
-      (selectedPriceRange.value === 'Under Rs. 2000' && course.price < 2000) ||
-      (selectedPriceRange.value === 'Rs. 2000-5000' && course.price >= 2000 && course.price <= 5000) ||
-      (selectedPriceRange.value === 'Above Rs. 5000' && course.price > 5000)
+      (selectedPriceRange.value === 'Under Rs. 2000' && price < 2000) ||
+      (selectedPriceRange.value === 'Rs. 2000-5000' && price >= 2000 && price <= 5000) ||
+      (selectedPriceRange.value === 'Above Rs. 5000' && price > 5000)
 
     return matchesSearch && matchesCategory && matchesLevel && matchesPrice
   })
+
+  // Apply sorting
+  if (sortBy.value === 'newest') {
+    filtered = [...filtered].sort(
+      (a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
+    )
+  } else if (sortBy.value === 'price-low') {
+    filtered = [...filtered].sort((a, b) => getCoursePrice(a) - getCoursePrice(b))
+  } else if (sortBy.value === 'price-high') {
+    filtered = [...filtered].sort((a, b) => getCoursePrice(b) - getCoursePrice(a))
+  }
+
+  return filtered
+})
+
+onMounted(() => {
+  fetchCourses()
 })
 </script>
 
@@ -155,7 +80,8 @@ const filteredCourses = computed(() => {
         <div class="max-w-4xl mx-auto text-center">
           <h1 class="text-4xl md:text-5xl font-bold mb-6">Explore Our Courses</h1>
           <p class="text-xl text-primary-100 mb-8">
-            Choose from 200+ expert-led courses across Engineering, Medical, Management, IT, and more
+            Choose from {{ courses.length }}+ expert-led courses across Engineering, Medical,
+            Management, IT, and more
           </p>
           <div class="relative max-w-2xl mx-auto">
             <font-awesome-icon
@@ -176,7 +102,27 @@ const filteredCourses = computed(() => {
     <!-- Filters and Courses -->
     <section class="py-12 bg-gray-50">
       <div class="container mx-auto px-4">
-        <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Loading State -->
+        <div v-if="loading" class="text-center py-20">
+          <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-500 border-t-transparent"></div>
+          <p class="mt-4 text-gray-600">Loading courses...</p>
+        </div>
+
+        <!-- Error State -->
+        <div v-else-if="error" class="text-center py-20">
+          <font-awesome-icon :icon="['fas', 'exclamation-circle']" class="text-6xl text-red-500 mb-4" />
+          <h3 class="text-2xl font-bold text-gray-900 mb-2">Error Loading Courses</h3>
+          <p class="text-gray-600 mb-6">{{ error }}</p>
+          <button
+            @click="fetchCourses"
+            class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold transition"
+          >
+            Try Again
+          </button>
+        </div>
+
+        <!-- Courses Content -->
+        <div v-else class="flex flex-col lg:flex-row gap-8">
           <!-- Sidebar Filters -->
           <aside class="lg:w-64 flex-shrink-0">
             <div class="bg-white rounded-2xl p-6 border border-gray-200 sticky top-4">
@@ -271,12 +217,11 @@ const filteredCourses = computed(() => {
                 <option value="newest">Newest</option>
                 <option value="price-low">Price: Low to High</option>
                 <option value="price-high">Price: High to Low</option>
-                <option value="rating">Highest Rated</option>
               </select>
             </div>
 
             <div v-if="filteredCourses.length > 0" class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-              <CourseCard v-for="course in filteredCourses" :key="course.id" v-bind="course" />
+              <CourseCard v-for="course in filteredCourses" :key="course.id" :course="course" />
             </div>
 
             <div v-else class="text-center py-20">

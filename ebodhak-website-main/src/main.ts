@@ -43,6 +43,7 @@ import {
   faCalendar,
   faFileAlt,
   faQuestionCircle,
+  faExclamationCircle,
 } from '@fortawesome/free-solid-svg-icons'
 import { faFacebook, faTwitter, faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons'
 
@@ -82,6 +83,7 @@ library.add(
   faCalendar,
   faFileAlt,
   faQuestionCircle,
+  faExclamationCircle,
   faFacebook,
   faTwitter,
   faInstagram,

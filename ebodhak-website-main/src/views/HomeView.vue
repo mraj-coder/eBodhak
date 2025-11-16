@@ -263,36 +263,70 @@ const pricingPlans = [
           >
             <div :class="['absolute inset-0 bg-gradient-to-br', slide.bgGradient]">
               <div class="container mx-auto px-4 h-full flex items-center">
-                <div class="max-w-3xl">
-                  <div class="mb-6">
-                    <span
-                      class="bg-primary-500 text-white px-6 py-3 rounded-full text-sm font-semibold shadow-lg"
+                <div class="grid lg:grid-cols-2 gap-12 items-center w-full">
+                  <!-- Left Content -->
+                  <div class="max-w-3xl">
+                    <div class="mb-6">
+                      <span
+                        class="bg-primary-500 text-white px-6 py-3 rounded-full text-sm font-semibold shadow-lg"
+                      >
+                        {{ slide.badge }}
+                      </span>
+                    </div>
+                    <h1
+                      class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight text-gray-900"
                     >
-                      {{ slide.badge }}
-                    </span>
+                      {{ slide.title }}
+                    </h1>
+                    <p class="text-xl md:text-2xl mb-4 text-gray-700 font-medium">
+                      {{ slide.subtitle }}
+                    </p>
+                    <p class="text-lg md:text-xl mb-10 text-gray-600">
+                      {{ slide.description }}
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                      <button
+                        class="bg-primary-500 hover:bg-primary-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition transform hover:scale-105 shadow-lg hover:shadow-xl"
+                      >
+                        Start Free Trial
+                      </button>
+                      <button
+                        class="bg-white border-2 border-gray-300 text-gray-700 hover:border-primary-500 hover:text-primary-600 px-8 py-4 rounded-xl font-bold text-lg transition shadow-md hover:shadow-lg"
+                      >
+                        Explore Courses
+                      </button>
+                    </div>
                   </div>
-                  <h1
-                    class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight text-gray-900"
-                  >
-                    {{ slide.title }}
-                  </h1>
-                  <p class="text-xl md:text-2xl mb-4 text-gray-700 font-medium">
-                    {{ slide.subtitle }}
-                  </p>
-                  <p class="text-lg md:text-xl mb-10 text-gray-600">
-                    {{ slide.description }}
-                  </p>
-                  <div class="flex flex-col sm:flex-row gap-4">
-                    <button
-                      class="bg-primary-500 hover:bg-primary-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition transform hover:scale-105 shadow-lg hover:shadow-xl"
-                    >
-                      Start Free Trial
-                    </button>
-                    <button
-                      class="bg-white border-2 border-gray-300 text-gray-700 hover:border-primary-500 hover:text-primary-600 px-8 py-4 rounded-xl font-bold text-lg transition shadow-md hover:shadow-lg"
-                    >
-                      Explore Courses
-                    </button>
+
+                  <!-- Right Image -->
+                  <div class="hidden lg:flex items-center justify-center relative">
+                    <div class="relative w-full max-w-xl">
+                      <!-- Decorative background blur -->
+                      <div 
+                        :class="['absolute inset-0 rounded-full blur-3xl opacity-20', 
+                        currentSlide === 0 ? 'bg-blue-400' : currentSlide === 1 ? 'bg-purple-400' : 'bg-orange-400']"
+                      ></div>
+                      
+                      <!-- Main Hero Image -->
+                      <img
+                        src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=800&fit=crop&q=80"
+                        alt="Students collaborating and learning together in a modern educational environment"
+                        class="relative z-10 w-full h-auto rounded-3xl shadow-2xl object-cover animate-float"
+                        style="max-height: 600px;"
+                        loading="eager"
+                      />
+                      
+                      <!-- Floating decorative elements -->
+                      <div class="absolute -top-6 -right-6 w-20 h-20 bg-white rounded-2xl shadow-xl flex items-center justify-center text-4xl animate-float-icon z-20">
+                        📚
+                      </div>
+                      <div class="absolute -bottom-6 -left-6 w-16 h-16 bg-white rounded-2xl shadow-xl flex items-center justify-center text-3xl animate-float-icon z-20" style="animation-delay: 1s">
+                        🎓
+                      </div>
+                      <div class="absolute top-1/4 -left-8 w-14 h-14 bg-white rounded-2xl shadow-xl flex items-center justify-center text-2xl animate-float-icon z-20" style="animation-delay: 2s">
+                        💡
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -600,5 +634,24 @@ const pricingPlans = [
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+/* Smooth floating animation for hero image */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Floating icon animation */
+.animate-float-icon {
+  animation: float 4s ease-in-out infinite;
 }
 </style>
