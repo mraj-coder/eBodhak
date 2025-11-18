@@ -90,6 +90,29 @@ library.add(
   faLinkedin,
 )
 
+// Add additional icons
+import {
+  faChevronRight,
+  faChevronLeft,
+  faLightbulb,
+  faTimesCircle,
+  faCheckCircle,
+  faRedo,
+  faList,
+  faCreditCard,
+} from '@fortawesome/free-solid-svg-icons'
+
+library.add(
+  faChevronRight,
+  faChevronLeft,
+  faLightbulb,
+  faTimesCircle,
+  faCheckCircle,
+  faRedo,
+  faList,
+  faCreditCard,
+)
+
 const app = createApp(App)
 
 app.component('font-awesome-icon', FontAwesomeIcon)

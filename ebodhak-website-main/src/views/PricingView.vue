@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { RouterLink } from 'vue-router'
 
 const billingCycle = ref<'monthly' | 'annual'>('monthly')
 
@@ -187,16 +188,17 @@ const getSavings = (plan: typeof pricingPlans[0]) => {
                 </span>
               </div>
 
-              <button
+              <RouterLink
+                to="/courses"
                 :class="[
-                  'w-full py-4 rounded-xl font-bold text-lg transition shadow-md hover:shadow-lg',
+                  'w-full py-4 rounded-xl font-bold text-lg transition shadow-md hover:shadow-lg text-center block',
                   plan.highlighted
                     ? 'bg-primary-500 text-white hover:bg-primary-600 transform hover:scale-105'
                     : 'bg-white border-2 border-gray-300 text-gray-700 hover:border-primary-500 hover:text-primary-600',
                 ]"
               >
                 Get Started Now
-              </button>
+              </RouterLink>
             </div>
 
             <div class="space-y-4">
@@ -366,18 +368,20 @@ const getSavings = (plan: typeof pricingPlans[0]) => {
           Our team is here to help you choose the right plan for your learning goals
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <button
+          <RouterLink
+            to="/contact"
             class="bg-white text-primary-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition transform hover:scale-105 shadow-lg"
           >
             <font-awesome-icon :icon="['fas', 'headset']" class="mr-2" />
             Contact Support
-          </button>
-          <button
+          </RouterLink>
+          <RouterLink
+            to="/contact"
             class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-primary-600 transition"
           >
             <font-awesome-icon :icon="['fas', 'calendar']" class="mr-2" />
             Schedule a Call
-          </button>
+          </RouterLink>
         </div>
       </div>
     </section>

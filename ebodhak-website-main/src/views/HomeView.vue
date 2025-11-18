@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { RouterLink, useRouter } from 'vue-router'
+
+const router = useRouter()
 
 // Hero Carousel
 const currentSlide = ref(0)
@@ -13,6 +16,8 @@ const heroSlides = [
       'Comprehensive e-learning platform for all competitive exams and professional courses',
     badge: '🎓 15+ Fields of Study',
     bgGradient: 'from-primary-50 to-blue-50',
+    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=800&fit=crop&q=80',
+    imageAlt: 'Students collaborating and learning together in a modern educational environment',
   },
   {
     title: 'Learn at Your Own Pace',
@@ -20,6 +25,8 @@ const heroSlides = [
     description: 'Live classes, recorded sessions, and unlimited practice materials available 24/7',
     badge: '📱 Multi-Device Learning',
     bgGradient: 'from-purple-50 to-pink-50',
+    image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=800&fit=crop&q=80',
+    imageAlt: 'Student studying online with laptop and notes in a comfortable learning environment',
   },
   {
     title: 'Expert-Led Instruction',
@@ -27,6 +34,8 @@ const heroSlides = [
     description: 'Learn from experienced educators and industry experts with proven track records',
     badge: '👨‍🏫 Top 1% Educators',
     bgGradient: 'from-orange-50 to-yellow-50',
+    image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&h=800&fit=crop&q=80',
+    imageAlt: 'Professional instructor teaching in a modern classroom with engaged students',
   },
 ]
 
@@ -284,17 +293,19 @@ const pricingPlans = [
                     <p class="text-lg md:text-xl mb-10 text-gray-600">
                       {{ slide.description }}
                     </p>
-                    <div class="flex flex-col sm:flex-row gap-4">
-                      <button
-                        class="bg-primary-500 hover:bg-primary-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition transform hover:scale-105 shadow-lg hover:shadow-xl"
+                   <div class="flex flex-col sm:flex-row gap-4">
+                      <RouterLink
+                        to="/pricing"
+                        class="bg-primary-500 hover:bg-primary-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition transform hover:scale-105 shadow-lg hover:shadow-xl text-center"
                       >
                         Start Free Trial
-                      </button>
-                      <button
-                        class="bg-white border-2 border-gray-300 text-gray-700 hover:border-primary-500 hover:text-primary-600 px-8 py-4 rounded-xl font-bold text-lg transition shadow-md hover:shadow-lg"
+                      </RouterLink>
+                      <RouterLink
+                        to="/courses"
+                        class="bg-white border-2 border-gray-300 text-gray-700 hover:border-primary-500 hover:text-primary-600 px-8 py-4 rounded-xl font-bold text-lg transition shadow-md hover:shadow-lg text-center"
                       >
                         Explore Courses
-                      </button>
+                      </RouterLink>
                     </div>
                   </div>
 
@@ -309,8 +320,8 @@ const pricingPlans = [
                       
                       <!-- Main Hero Image -->
                       <img
-                        src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=800&fit=crop&q=80"
-                        alt="Students collaborating and learning together in a modern educational environment"
+                        :src="heroSlides[currentSlide]?.image"
+                        :alt="heroSlides[currentSlide]?.imageAlt"
                         class="relative z-10 w-full h-auto rounded-3xl shadow-2xl object-cover animate-float"
                         style="max-height: 600px;"
                         loading="eager"
@@ -400,9 +411,10 @@ const pricingPlans = [
           </p>
         </div>
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div
+          <RouterLink
             v-for="category in categories"
             :key="category.name"
+            :to="`/courses?category=${encodeURIComponent(category.name)}`"
             class="bg-white rounded-2xl p-8 border border-gray-200 hover:border-primary-300 hover:shadow-xl transition transform hover:-translate-y-1 cursor-pointer group"
           >
             <div
@@ -424,7 +436,7 @@ const pricingPlans = [
               </svg>
               <span>{{ category.students }} Students</span>
             </div>
-          </div>
+          </RouterLink>
         </div>
       </div>
     </section>
@@ -556,16 +568,17 @@ const pricingPlans = [
                 <span class="text-gray-700">{{ feature }}</span>
               </li>
             </ul>
-            <button
+            <RouterLink
+              to="/pricing"
               :class="[
-                'w-full py-4 rounded-xl font-bold text-lg transition shadow-md hover:shadow-lg',
+                'w-full py-4 rounded-xl font-bold text-lg transition shadow-md hover:shadow-lg text-center block',
                 plan.highlighted
                   ? 'bg-primary-500 text-white hover:bg-primary-600'
                   : 'bg-white border-2 border-gray-300 text-gray-700 hover:border-primary-500 hover:text-primary-600',
               ]"
             >
               Get Started Now
-            </button>
+            </RouterLink>
           </div>
         </div>
         <div class="text-center mt-12">
@@ -612,11 +625,12 @@ const pricingPlans = [
         <p class="text-xl md:text-2xl mb-10 max-w-3xl mx-auto">
           Join 15,000+ students already learning and succeeding with Ebodhak
         </p>
-        <button
-          class="bg-white text-primary-600 px-12 py-5 rounded-xl font-bold text-xl hover:bg-gray-100 transition transform hover:scale-105 shadow-2xl"
+        <RouterLink
+          to="/pricing"
+          class="bg-white text-primary-600 px-12 py-5 rounded-xl font-bold text-xl hover:bg-gray-100 transition transform hover:scale-105 shadow-2xl inline-block"
         >
           Start Your Free Trial Today →
-        </button>
+        </RouterLink>
         <p class="mt-8 text-primary-100">
           No credit card required • Instant access • Cancel anytime
         </p>

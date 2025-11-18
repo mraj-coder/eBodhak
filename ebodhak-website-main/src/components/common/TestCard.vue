@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+
 interface TestCardProps {
   id: string
   title: string
@@ -11,6 +13,11 @@ interface TestCardProps {
 }
 
 const props = defineProps<TestCardProps>()
+const router = useRouter()
+
+const startTest = () => {
+  router.push(`/mock-tests/test/${props.id}`)
+}
 
 const difficultyColor = {
   Easy: 'bg-green-100 text-green-700',
@@ -55,6 +62,7 @@ const difficultyColor = {
     </div>
 
     <button
+      @click="startTest"
       class="w-full bg-primary-500 hover:bg-primary-600 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 mt-auto"
     >
       <font-awesome-icon :icon="['fas', 'play']" class="mr-2" />

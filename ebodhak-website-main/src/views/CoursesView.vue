@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import CourseCard from '../components/common/CourseCard.vue'
 import { useCourses } from '@/composables/useCourses'
 import type { Course } from '@/types/course'
 
+const route = useRoute()
 const { courses, loading, error, fetchCourses } = useCourses()
 
 const searchQuery = ref('')
@@ -68,6 +70,11 @@ const filteredCourses = computed(() => {
 })
 
 onMounted(() => {
+  // Check if there's a category query parameter
+  const categoryParam = route.query.category as string
+  if (categoryParam) {
+    selectedCategory.value = categoryParam
+  }
   fetchCourses()
 })
 </script>

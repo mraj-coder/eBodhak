@@ -31,9 +31,68 @@ const router = createRouter({
       component: () => import('../views/MockTestsView.vue'),
     },
     {
+      path: '/mock-tests/test/:id',
+      name: 'test-taking',
+      component: () => import('../views/TestTakingView.vue'),
+    },
+    {
+      path: '/mock-tests/results/:id',
+      name: 'test-results',
+      component: () => import('../views/TestResultsView.vue'),
+    },
+    {
       path: '/pricing',
       name: 'pricing',
       component: () => import('../views/PricingView.vue'),
+    },
+    {
+      path: '/contact',
+      name: 'contact',
+      component: () => import('../views/ContactView.vue'),
+    },
+    {
+      path: '/faq',
+      name: 'faq',
+      component: () => import('../views/FAQView.vue'),
+    },
+    {
+      path: '/help',
+      name: 'help',
+      component: () => import('../views/HelpView.vue'),
+    },
+    {
+      path: '/terms',
+      name: 'terms',
+      component: () => import('../views/TermsView.vue'),
+    },
+    {
+      path: '/privacy',
+      name: 'privacy',
+      component: () => import('../views/PrivacyView.vue'),
+    },
+    {
+      path: '/careers',
+      name: 'careers',
+      component: () => import('../views/ComingSoonView.vue'),
+      props: { title: 'Careers', description: 'Join our team! Career opportunities coming soon.' },
+    },
+    {
+      path: '/blog',
+      name: 'blog',
+      component: () => import('../views/ComingSoonView.vue'),
+      props: { title: 'Blog', description: 'Educational content and insights coming soon.' },
+    },
+    {
+      path: '/materials',
+      name: 'materials',
+      component: () => import('../views/ComingSoonView.vue'),
+      props: { title: 'Study Materials', description: 'Downloadable study materials coming soon.' },
+    },
+    {
+      path: '/success-stories',
+      name: 'success-stories',
+      component: () => import('../views/ComingSoonView.vue'),
+      props: { title: 'Success Stories', description: 'Inspiring student success stories coming soon.' },
     },
   ],
   scrollBehavior(to, from, savedPosition) {

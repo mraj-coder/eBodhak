@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { useCourse } from '@/composables/useCourses'
+import { useCourse, useCourses } from '@/composables/useCourses'
+import CourseCard from '@/components/common/CourseCard.vue'
 
 const route = useRoute()
 const courseId = computed(() => parseInt(route.params.id as string))
 
 const { course, loading, error, fetchCourse } = useCourse()
+const { courses: allCourses, fetchCourses } = useCourses()
 
 const activeTab = ref('overview')
 const expandedModules = ref<Set<number>>(new Set())
@@ -99,7 +101,16 @@ const reviews = [
   },
 ]
 
-const relatedCourses = ref([])
+const relatedCourses = computed(() => {
+  if (!course.value) return []
+  
+  return allCourses.value
+    .filter(c => 
+      c.id !== course.value?.id && 
+      c.category?.id === course.value?.category?.id
+    )
+    .slice(0, 3)
+})
 
 const toggleModule = (index: number) => {
   if (expandedModules.value.has(index)) {
@@ -111,6 +122,7 @@ const toggleModule = (index: number) => {
 
 onMounted(() => {
   fetchCourse(courseId.value)
+  fetchCourses()
 })
 </script>
 
@@ -471,6 +483,16 @@ onMounted(() => {
           </div>
         </div>
       </div>
+
+      <!-- Related Courses Section -->
+      <section v-if="relatedCourses.length > 0" class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+          <h2 class="text-3xl font-bold text-gray-900 mb-8">Related Courses</h2>
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <CourseCard v-for="relatedCourse in relatedCourses" :key="relatedCourse.id" :course="relatedCourse" />
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 </template>
