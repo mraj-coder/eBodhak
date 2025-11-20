@@ -137,6 +137,26 @@ const activeTab = ref<'about' | 'courses' | 'reviews'>('about')
       <div class="container mx-auto px-4">
         <!-- About Tab -->
         <div v-if="activeTab === 'about'" class="max-w-4xl mx-auto">
+          <!-- Video Introduction -->
+          <div v-if="instructor.videoIntro" class="bg-white rounded-2xl border border-gray-200 p-8 mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Video Introduction</h2>
+            <div class="aspect-video bg-gray-900 rounded-xl overflow-hidden relative">
+              <div class="absolute inset-0 flex items-center justify-center">
+                <button class="w-20 h-20 bg-white/90 hover:bg-white rounded-full flex items-center justify-center transition group">
+                  <font-awesome-icon :icon="['fas', 'play']" class="text-primary-600 text-2xl ml-1 group-hover:scale-110 transition" />
+                </button>
+              </div>
+              <img
+                :src="instructor.image"
+                :alt="instructor.name"
+                class="w-full h-full object-cover opacity-50"
+              />
+            </div>
+            <p class="text-gray-600 mt-4 text-center">
+              Watch {{ instructor.name }}'s introduction video to learn more about their teaching approach
+            </p>
+          </div>
+
           <div class="bg-white rounded-2xl border border-gray-200 p-8 mb-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-4">About {{ instructor.name }}</h2>
             <p class="text-gray-700 text-lg leading-relaxed mb-6">{{ instructor.bio }}</p>

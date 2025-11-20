@@ -87,6 +87,200 @@ export const mockDashboardStats: DashboardStats = {
   testsCompleted: 24,
 }
 
+export const mockRecentTestScores = [
+  {
+    id: 1,
+    testName: 'Physics Mock Test #12',
+    score: 92,
+    totalQuestions: 50,
+    correctAnswers: 46,
+    date: '2024-01-14T18:45:00',
+    subject: 'Physics',
+  },
+  {
+    id: 2,
+    testName: 'Chemistry Practice Test',
+    score: 85,
+    totalQuestions: 40,
+    correctAnswers: 34,
+    date: '2024-01-12T16:30:00',
+    subject: 'Chemistry',
+  },
+  {
+    id: 3,
+    testName: 'Biology Mock Test #8',
+    score: 88,
+    totalQuestions: 45,
+    correctAnswers: 40,
+    date: '2024-01-10T14:20:00',
+    subject: 'Biology',
+  },
+]
+
+export const mockAchievements = [
+  {
+    id: 1,
+    title: 'First Steps',
+    description: 'Complete your first lesson',
+    icon: 'flag-checkered',
+    color: 'text-blue-600',
+    bgColor: 'bg-blue-100',
+    unlocked: true,
+    date: '2024-01-05',
+  },
+  {
+    id: 2,
+    title: 'Week Warrior',
+    description: 'Maintain 7-day streak',
+    icon: 'fire',
+    color: 'text-orange-600',
+    bgColor: 'bg-orange-100',
+    unlocked: true,
+    date: '2024-01-12',
+  },
+  {
+    id: 3,
+    title: 'Quiz Master',
+    description: 'Score 90%+ in 5 tests',
+    icon: 'trophy',
+    color: 'text-yellow-600',
+    bgColor: 'bg-yellow-100',
+    unlocked: false,
+    progress: 60,
+  },
+  {
+    id: 4,
+    title: 'Course Completer',
+    description: 'Finish your first course',
+    icon: 'graduation-cap',
+    color: 'text-green-600',
+    bgColor: 'bg-green-100',
+    unlocked: true,
+    date: '2024-01-10',
+  },
+  {
+    id: 5,
+    title: 'Study Marathon',
+    description: 'Study for 100 hours',
+    icon: 'clock',
+    color: 'text-purple-600',
+    bgColor: 'bg-purple-100',
+    unlocked: false,
+    progress: 75,
+  },
+  {
+    id: 6,
+    title: 'Perfect Score',
+    description: 'Get 100% in a test',
+    icon: 'star',
+    color: 'text-pink-600',
+    bgColor: 'bg-pink-100',
+    unlocked: false,
+    progress: 0,
+  },
+]
+
+export const mockLearningGoals = [
+  {
+    id: 1,
+    title: 'Daily Study Time',
+    target: 4,
+    current: 2.5,
+    unit: 'hours/day',
+    icon: 'clock',
+    color: 'blue',
+    deadline: 'Daily Goal',
+  },
+  {
+    id: 2,
+    title: 'Weekly Tests',
+    target: 5,
+    current: 3,
+    unit: 'tests',
+    icon: 'clipboard-list',
+    color: 'green',
+    deadline: 'This Week',
+  },
+  {
+    id: 3,
+    title: 'Course Completion',
+    target: 3,
+    current: 2,
+    unit: 'courses',
+    icon: 'book',
+    color: 'purple',
+    deadline: 'This Month',
+  },
+]
+
+export const mockWeeklyActivity = [
+  { day: 'Mon', hours: 3.5, date: 'Jan 15' },
+  { day: 'Tue', hours: 4.2, date: 'Jan 16' },
+  { day: 'Wed', hours: 2.8, date: 'Jan 17' },
+  { day: 'Thu', hours: 5.1, date: 'Jan 18' },
+  { day: 'Fri', hours: 3.9, date: 'Jan 19' },
+  { day: 'Sat', hours: 1.5, date: 'Jan 20' },
+  { day: 'Sun', hours: 0.8, date: 'Jan 21' },
+]
+
+export const mockPersonalizedInsights = [
+  {
+    id: 1,
+    type: 'success' as const,
+    title: 'Great Progress!',
+    message: 'You\'re 25% ahead of your weekly study goal. Keep up the excellent work!',
+  },
+  {
+    id: 2,
+    type: 'tip' as const,
+    title: 'Study Tip',
+    message: 'Your best performance is in morning sessions. Try scheduling important topics between 9-11 AM.',
+  },
+  {
+    id: 3,
+    type: 'warning' as const,
+    title: 'Upcoming Deadline',
+    message: 'You have 3 pending assignments due this week. Complete them to stay on track.',
+    action: {
+      label: 'View Assignments',
+      link: '/my-courses',
+    },
+  },
+  {
+    id: 4,
+    type: 'info' as const,
+    title: 'New Course Recommendation',
+    message: 'Based on your progress, we recommend "Advanced Physics" to complement your current studies.',
+    action: {
+      label: 'Explore Course',
+      link: '/courses',
+    },
+  },
+]
+
+export const mockRecommendedCourses = [
+  {
+    id: 4,
+    name: 'Advanced Physics for JEE',
+    image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400&h=300&fit=crop',
+    category: 'Engineering',
+    instructor: 'Dr. Sarah Johnson',
+    rating: 4.7,
+    students: 3200,
+    price: 4999,
+  },
+  {
+    id: 5,
+    name: 'Organic Chemistry Mastery',
+    image: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=400&h=300&fit=crop',
+    category: 'Medical',
+    instructor: 'Prof. Michael Chen',
+    rating: 4.9,
+    students: 4500,
+    price: 5999,
+  },
+]
+
 export const mockEnrolledCourses: EnrolledCourse[] = [
   {
     id: 1,
@@ -223,6 +417,7 @@ export const mockInstructors: Instructor[] = [
       linkedin: 'https://linkedin.com/in/rajesh-kumar',
       youtube: 'https://youtube.com/@drrajeshkumar',
     },
+    videoIntro: 'https://example.com/intro-video',
   },
   {
     id: 2,
@@ -242,6 +437,7 @@ export const mockInstructors: Instructor[] = [
       linkedin: 'https://linkedin.com/in/amit-sharma',
       twitter: 'https://twitter.com/profamitsharma',
     },
+    videoIntro: 'https://example.com/intro-video-2',
   },
 ]
 

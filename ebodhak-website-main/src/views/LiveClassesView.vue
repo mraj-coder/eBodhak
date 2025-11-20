@@ -202,13 +202,26 @@ const formatTime = (dateString: string) => {
                 </span>
               </div>
 
-              <a
-                :href="classItem.meetingLink"
-                target="_blank"
-                class="block w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-bold text-center transition"
-              >
-                Join Live Class
-              </a>
+              <div class="flex gap-3">
+                <a
+                  :href="classItem.meetingLink"
+                  target="_blank"
+                  class="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-bold text-center transition"
+                >
+                  Join Live Class
+                </a>
+                <button class="bg-white border-2 border-red-500 text-red-500 hover:bg-red-50 px-4 rounded-xl font-bold transition">
+                  <font-awesome-icon :icon="['fas', 'question-circle']" />
+                </button>
+              </div>
+              
+              <!-- Q&A Section -->
+              <div class="mt-4 pt-4 border-t border-gray-200">
+                <button class="text-sm text-gray-600 hover:text-primary-600 font-semibold flex items-center gap-2">
+                  <font-awesome-icon :icon="['fas', 'comments']" />
+                  Ask a Question
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -262,9 +275,27 @@ const formatTime = (dateString: string) => {
                 </div>
               </div>
 
-              <button class="w-full bg-primary-500 hover:bg-primary-600 text-white py-2.5 rounded-xl font-semibold transition">
-                Set Reminder
-              </button>
+              <div class="flex gap-3">
+                <button class="flex-1 bg-primary-500 hover:bg-primary-600 text-white py-2.5 rounded-xl font-semibold transition">
+                  Set Reminder
+                </button>
+                <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 rounded-xl font-semibold transition">
+                  <font-awesome-icon :icon="['fas', 'question-circle']" />
+                </button>
+              </div>
+              
+              <!-- Q&A Preview -->
+              <div class="mt-4 pt-4 border-t border-gray-100">
+                <div class="flex items-center justify-between text-sm">
+                  <span class="text-gray-600 flex items-center gap-2">
+                    <font-awesome-icon :icon="['fas', 'comments']" class="text-primary-500" />
+                    Q&A Available
+                  </span>
+                  <span class="text-primary-600 font-semibold hover:text-primary-700 cursor-pointer">
+                    View Questions
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

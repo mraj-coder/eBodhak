@@ -142,6 +142,62 @@ const handleSubmit = () => {
             </div>
 
             <div class="bg-white rounded-2xl p-8 border border-gray-200">
+              <h3 class="text-lg font-bold text-gray-900 mb-4">Support Hours</h3>
+              <div class="space-y-3 text-gray-700">
+                <div class="flex items-center justify-between">
+                  <span>Monday - Friday</span>
+                  <span class="font-semibold">8:00 AM - 6:00 PM</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>Saturday</span>
+                  <span class="font-semibold">10:00 AM - 4:00 PM</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>Sunday</span>
+                  <span class="font-semibold text-red-600">Closed</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-8 border border-gray-200">
+              <h3 class="text-lg font-bold text-gray-900 mb-4">Quick Links</h3>
+              <div class="space-y-3">
+                <RouterLink
+                  to="/faq"
+                  class="flex items-center gap-3 text-gray-700 hover:text-primary-600 transition"
+                >
+                  <font-awesome-icon :icon="['fas', 'question-circle']" class="text-primary-500" />
+                  <span class="font-semibold">FAQs</span>
+                </RouterLink>
+                <RouterLink
+                  to="/help"
+                  class="flex items-center gap-3 text-gray-700 hover:text-primary-600 transition"
+                >
+                  <font-awesome-icon :icon="['fas', 'life-ring']" class="text-primary-500" />
+                  <span class="font-semibold">Help Center</span>
+                </RouterLink>
+              </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl p-8 text-white">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                  <font-awesome-icon :icon="['fas', 'comments']" class="text-2xl" />
+                </div>
+                <div>
+                  <h3 class="text-lg font-bold">Live Chat</h3>
+                  <p class="text-primary-100 text-sm">Get instant help</p>
+                </div>
+              </div>
+              <p class="text-primary-100 mb-4">
+                Chat with our support team for immediate assistance with your queries.
+              </p>
+              <button class="w-full bg-white text-primary-600 hover:bg-primary-50 py-3 rounded-xl font-bold transition">
+                Start Chat
+              </button>
+            </div>
+
+            <div class="bg-white rounded-2xl p-8 border border-gray-200">
               <h3 class="text-lg font-bold text-gray-900 mb-4">Follow Us</h3>
               <div class="flex gap-4">
                 <a href="#" class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 hover:bg-primary-500 hover:text-white transition">
