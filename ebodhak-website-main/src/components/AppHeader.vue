@@ -27,8 +27,9 @@ const closeMobileMenu = () => {
           <RouterLink to="/" class="nav-link">Home</RouterLink>
           <RouterLink to="/courses" class="nav-link">Courses</RouterLink>
           <RouterLink to="/mock-tests" class="nav-link">Mock Tests</RouterLink>
-          <RouterLink to="/pricing" class="nav-link">Pricing</RouterLink>
-          <RouterLink to="/about" class="nav-link">About</RouterLink>
+          <RouterLink to="/live-classes" class="nav-link">Live Classes</RouterLink>
+          <RouterLink to="/blog" class="nav-link">Blog</RouterLink>
+          <RouterLink to="/dashboard" class="nav-link">Dashboard</RouterLink>
         </nav>
 
         <!-- CTA Buttons -->
@@ -82,10 +83,13 @@ const closeMobileMenu = () => {
         <RouterLink to="/mock-tests" class="nav-link-mobile" @click="closeMobileMenu"
           >Mock Tests</RouterLink
         >
-        <RouterLink to="/pricing" class="nav-link-mobile" @click="closeMobileMenu"
-          >Pricing</RouterLink
+        <RouterLink to="/live-classes" class="nav-link-mobile" @click="closeMobileMenu"
+          >Live Classes</RouterLink
         >
-        <RouterLink to="/about" class="nav-link-mobile" @click="closeMobileMenu">About</RouterLink>
+        <RouterLink to="/blog" class="nav-link-mobile" @click="closeMobileMenu">Blog</RouterLink>
+        <RouterLink to="/dashboard" class="nav-link-mobile" @click="closeMobileMenu"
+          >Dashboard</RouterLink
+        >
         <div class="mobile-actions">
           <button class="btn btn-secondary btn-block" @click="closeMobileMenu">Login</button>
           <button class="btn btn-primary btn-block" @click="closeMobileMenu">Get Started</button>

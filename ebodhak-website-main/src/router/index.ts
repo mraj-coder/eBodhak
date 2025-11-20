@@ -77,10 +77,30 @@ const router = createRouter({
       props: { title: 'Careers', description: 'Join our team! Career opportunities coming soon.' },
     },
     {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import('../views/DashboardView.vue'),
+    },
+    {
+      path: '/my-courses',
+      name: 'my-courses',
+      component: () => import('../views/MyCoursesView.vue'),
+    },
+    {
+      path: '/instructors/:id',
+      name: 'instructor-profile',
+      component: () => import('../views/InstructorProfileView.vue'),
+      props: true,
+    },
+    {
+      path: '/live-classes',
+      name: 'live-classes',
+      component: () => import('../views/LiveClassesView.vue'),
+    },
+    {
       path: '/blog',
       name: 'blog',
-      component: () => import('../views/ComingSoonView.vue'),
-      props: { title: 'Blog', description: 'Educational content and insights coming soon.' },
+      component: () => import('../views/BlogView.vue'),
     },
     {
       path: '/materials',
