@@ -266,31 +266,7 @@ GET /api/categories           // Get course categories
 
 ### 🟡 Medium Priority
 
-#### 5. **Student Dashboard** (`/dashboard`)
-
-**Purpose:** Personalized student portal
-
-**Suggested Features:**
-
-- Welcome section with student name
-- Enrolled courses progress
-- Upcoming live classes
-- Recent test scores
-- Study streak tracker
-- Recommended courses
-- Announcements
-- Quick actions (Resume learning, Take test, etc.)
-
-**Components:**
-
-- `DashboardStats.vue`
-- `EnrolledCourses.vue`
-- `UpcomingClasses.vue`
-- `RecentActivity.vue`
-
----
-
-#### 6. **My Courses Page** (`/my-courses`)
+#### 5. **My Courses Page** (`/my-courses`)
 
 **Purpose:** View all enrolled courses
 
@@ -466,7 +442,6 @@ GET    /api/testimonials         // List testimonials
 
 3. **Phase 3 - User Features** (Week 3-4)
    - Authentication (Login/Signup)
-   - Student Dashboard
    - My Courses Page
 
 4. **Phase 4 - Additional Features** (Week 4-5)

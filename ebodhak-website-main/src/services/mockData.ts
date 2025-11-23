@@ -1,14 +1,78 @@
 import type { CoursesResponse } from '@/types/course'
-import type {
-  EnrolledCourse,
-  UpcomingClass,
-  DashboardStats,
-  RecentActivity,
-  Announcement,
-  Instructor,
-  BlogPost,
-  LiveClass,
-} from '@/types/dashboard'
+
+// Type definitions for mock data
+export interface Instructor {
+  id: number
+  name: string
+  title: string
+  bio: string
+  image: string
+  expertise: string[]
+  experience: number
+  students: number
+  courses: number
+  rating: number
+  totalReviews: number
+  education: string[]
+  certifications: string[]
+  socialLinks: {
+    linkedin?: string
+    twitter?: string
+    youtube?: string
+  }
+  videoIntro?: string
+}
+
+export interface BlogPost {
+  id: number
+  title: string
+  excerpt: string
+  content: string
+  author: string
+  authorImage: string
+  category: string
+  tags: string[]
+  image: string
+  publishedDate: string
+  readTime: number
+  views: number
+  featured: boolean
+}
+
+export interface LiveClass {
+  id: number
+  title: string
+  description: string
+  instructor: string
+  instructorImage: string
+  subject: string
+  category: string
+  startTime: string
+  endTime: string
+  duration: number
+  isRecorded: boolean
+  recordingUrl?: string
+  meetingLink: string
+  maxParticipants: number
+  currentParticipants: number
+  status: 'upcoming' | 'live' | 'completed'
+}
+
+export interface EnrolledCourse {
+  id: number
+  courseId: number
+  courseName: string
+  courseImage: string
+  category: string
+  progress: number
+  totalLessons: number
+  completedLessons: number
+  lastAccessed: string
+  instructor: string
+  status: 'in-progress' | 'completed' | 'not-started'
+  certificateUrl?: string
+  rating: number
+}
 
 // Mock data for development when API is unavailable
 export const mockCoursesResponse: CoursesResponse = {
@@ -77,210 +141,6 @@ export const mockCoursesResponse: CoursesResponse = {
   },
 }
 
-// Dashboard Mock Data
-export const mockDashboardStats: DashboardStats = {
-  totalCourses: 5,
-  completedCourses: 2,
-  hoursLearned: 127,
-  studyStreak: 12,
-  averageScore: 87,
-  testsCompleted: 24,
-}
-
-export const mockRecentTestScores = [
-  {
-    id: 1,
-    testName: 'Physics Mock Test #12',
-    score: 92,
-    totalQuestions: 50,
-    correctAnswers: 46,
-    date: '2024-01-14T18:45:00',
-    subject: 'Physics',
-  },
-  {
-    id: 2,
-    testName: 'Chemistry Practice Test',
-    score: 85,
-    totalQuestions: 40,
-    correctAnswers: 34,
-    date: '2024-01-12T16:30:00',
-    subject: 'Chemistry',
-  },
-  {
-    id: 3,
-    testName: 'Biology Mock Test #8',
-    score: 88,
-    totalQuestions: 45,
-    correctAnswers: 40,
-    date: '2024-01-10T14:20:00',
-    subject: 'Biology',
-  },
-]
-
-export const mockAchievements = [
-  {
-    id: 1,
-    title: 'First Steps',
-    description: 'Complete your first lesson',
-    icon: 'flag-checkered',
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-100',
-    unlocked: true,
-    date: '2024-01-05',
-  },
-  {
-    id: 2,
-    title: 'Week Warrior',
-    description: 'Maintain 7-day streak',
-    icon: 'fire',
-    color: 'text-orange-600',
-    bgColor: 'bg-orange-100',
-    unlocked: true,
-    date: '2024-01-12',
-  },
-  {
-    id: 3,
-    title: 'Quiz Master',
-    description: 'Score 90%+ in 5 tests',
-    icon: 'trophy',
-    color: 'text-yellow-600',
-    bgColor: 'bg-yellow-100',
-    unlocked: false,
-    progress: 60,
-  },
-  {
-    id: 4,
-    title: 'Course Completer',
-    description: 'Finish your first course',
-    icon: 'graduation-cap',
-    color: 'text-green-600',
-    bgColor: 'bg-green-100',
-    unlocked: true,
-    date: '2024-01-10',
-  },
-  {
-    id: 5,
-    title: 'Study Marathon',
-    description: 'Study for 100 hours',
-    icon: 'clock',
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-100',
-    unlocked: false,
-    progress: 75,
-  },
-  {
-    id: 6,
-    title: 'Perfect Score',
-    description: 'Get 100% in a test',
-    icon: 'star',
-    color: 'text-pink-600',
-    bgColor: 'bg-pink-100',
-    unlocked: false,
-    progress: 0,
-  },
-]
-
-export const mockLearningGoals = [
-  {
-    id: 1,
-    title: 'Daily Study Time',
-    target: 4,
-    current: 2.5,
-    unit: 'hours/day',
-    icon: 'clock',
-    color: 'blue',
-    deadline: 'Daily Goal',
-  },
-  {
-    id: 2,
-    title: 'Weekly Tests',
-    target: 5,
-    current: 3,
-    unit: 'tests',
-    icon: 'clipboard-list',
-    color: 'green',
-    deadline: 'This Week',
-  },
-  {
-    id: 3,
-    title: 'Course Completion',
-    target: 3,
-    current: 2,
-    unit: 'courses',
-    icon: 'book',
-    color: 'purple',
-    deadline: 'This Month',
-  },
-]
-
-export const mockWeeklyActivity = [
-  { day: 'Mon', hours: 3.5, date: 'Jan 15' },
-  { day: 'Tue', hours: 4.2, date: 'Jan 16' },
-  { day: 'Wed', hours: 2.8, date: 'Jan 17' },
-  { day: 'Thu', hours: 5.1, date: 'Jan 18' },
-  { day: 'Fri', hours: 3.9, date: 'Jan 19' },
-  { day: 'Sat', hours: 1.5, date: 'Jan 20' },
-  { day: 'Sun', hours: 0.8, date: 'Jan 21' },
-]
-
-export const mockPersonalizedInsights = [
-  {
-    id: 1,
-    type: 'success' as const,
-    title: 'Great Progress!',
-    message: 'You\'re 25% ahead of your weekly study goal. Keep up the excellent work!',
-  },
-  {
-    id: 2,
-    type: 'tip' as const,
-    title: 'Study Tip',
-    message: 'Your best performance is in morning sessions. Try scheduling important topics between 9-11 AM.',
-  },
-  {
-    id: 3,
-    type: 'warning' as const,
-    title: 'Upcoming Deadline',
-    message: 'You have 3 pending assignments due this week. Complete them to stay on track.',
-    action: {
-      label: 'View Assignments',
-      link: '/my-courses',
-    },
-  },
-  {
-    id: 4,
-    type: 'info' as const,
-    title: 'New Course Recommendation',
-    message: 'Based on your progress, we recommend "Advanced Physics" to complement your current studies.',
-    action: {
-      label: 'Explore Course',
-      link: '/courses',
-    },
-  },
-]
-
-export const mockRecommendedCourses = [
-  {
-    id: 4,
-    name: 'Advanced Physics for JEE',
-    image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400&h=300&fit=crop',
-    category: 'Engineering',
-    instructor: 'Dr. Sarah Johnson',
-    rating: 4.7,
-    students: 3200,
-    price: 4999,
-  },
-  {
-    id: 5,
-    name: 'Organic Chemistry Mastery',
-    image: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=400&h=300&fit=crop',
-    category: 'Medical',
-    instructor: 'Prof. Michael Chen',
-    rating: 4.9,
-    students: 4500,
-    price: 5999,
-  },
-]
-
 export const mockEnrolledCourses: EnrolledCourse[] = [
   {
     id: 1,
@@ -324,77 +184,6 @@ export const mockEnrolledCourses: EnrolledCourse[] = [
     status: 'completed',
     certificateUrl: '/certificates/aws-cloud-practitioner.pdf',
     rating: 5.0,
-  },
-]
-
-export const mockUpcomingClasses: UpcomingClass[] = [
-  {
-    id: 1,
-    title: 'Organic Chemistry - Advanced Concepts',
-    instructor: 'Dr. Rajesh Kumar',
-    instructorImage: 'https://i.pravatar.cc/150?u=rajesh',
-    courseName: 'NEET UG 2025',
-    startTime: '2024-01-16T14:00:00',
-    duration: 90,
-    meetingLink: 'https://meet.ebodhak.com/organic-chem-101',
-    isLive: false,
-  },
-  {
-    id: 2,
-    title: 'Calculus Problem Solving',
-    instructor: 'Prof. Amit Sharma',
-    instructorImage: 'https://i.pravatar.cc/150?u=amit',
-    courseName: 'JEE Main 2025',
-    startTime: '2024-01-16T16:30:00',
-    duration: 60,
-    meetingLink: 'https://meet.ebodhak.com/calculus-session',
-    isLive: false,
-  },
-]
-
-export const mockRecentActivity: RecentActivity[] = [
-  {
-    id: 1,
-    type: 'course',
-    title: 'Completed Chapter 5',
-    description: 'Organic Chemistry - NEET UG 2025',
-    timestamp: '2024-01-15T10:30:00',
-    icon: 'book-open',
-  },
-  {
-    id: 2,
-    type: 'test',
-    title: 'Scored 92%',
-    description: 'Physics Mock Test #12',
-    timestamp: '2024-01-14T18:45:00',
-    icon: 'trophy',
-  },
-  {
-    id: 3,
-    type: 'achievement',
-    title: 'Achievement Unlocked',
-    description: '7-day study streak!',
-    timestamp: '2024-01-14T08:00:00',
-    icon: 'award',
-  },
-]
-
-export const mockAnnouncements: Announcement[] = [
-  {
-    id: 1,
-    title: 'New Course Available',
-    message: 'AWS Solutions Architect course is now live!',
-    type: 'success',
-    date: '2024-01-15T09:00:00',
-    isRead: false,
-  },
-  {
-    id: 2,
-    title: 'Scheduled Maintenance',
-    message: 'Platform will be under maintenance on Jan 20, 2024 from 2-4 AM',
-    type: 'warning',
-    date: '2024-01-14T10:00:00',
-    isRead: false,
   },
 ]
 

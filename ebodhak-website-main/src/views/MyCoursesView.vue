@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import EnrolledCourses from '@/components/dashboard/EnrolledCourses.vue'
+import EnrolledCourses from '@/components/EnrolledCourses.vue'
 import { mockEnrolledCourses } from '@/services/mockData'
 
 const courses = ref(mockEnrolledCourses)

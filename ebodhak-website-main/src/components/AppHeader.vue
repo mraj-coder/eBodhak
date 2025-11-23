@@ -29,7 +29,6 @@ const closeMobileMenu = () => {
           <RouterLink to="/mock-tests" class="nav-link">Mock Tests</RouterLink>
           <RouterLink to="/live-classes" class="nav-link">Live Classes</RouterLink>
           <RouterLink to="/blog" class="nav-link">Blog</RouterLink>
-          <RouterLink to="/dashboard" class="nav-link">Dashboard</RouterLink>
         </nav>
 
         <!-- CTA Buttons -->
@@ -87,9 +86,6 @@ const closeMobileMenu = () => {
           >Live Classes</RouterLink
         >
         <RouterLink to="/blog" class="nav-link-mobile" @click="closeMobileMenu">Blog</RouterLink>
-        <RouterLink to="/dashboard" class="nav-link-mobile" @click="closeMobileMenu"
-          >Dashboard</RouterLink
-        >
         <div class="mobile-actions">
           <button class="btn btn-secondary btn-block" @click="closeMobileMenu">Login</button>
           <button class="btn btn-primary btn-block" @click="closeMobileMenu">Get Started</button>

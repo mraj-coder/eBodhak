@@ -77,11 +77,6 @@ const router = createRouter({
       props: { title: 'Careers', description: 'Join our team! Career opportunities coming soon.' },
     },
     {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: () => import('../views/DashboardView.vue'),
-    },
-    {
       path: '/my-courses',
       name: 'my-courses',
       component: () => import('../views/MyCoursesView.vue'),
