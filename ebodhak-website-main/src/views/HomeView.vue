@@ -335,15 +335,16 @@ const getDurationText = (plan: ProcessedPlan) => {
                    <div class="flex flex-col sm:flex-row gap-4">
                       <RouterLink
                         to="/pricing"
-                        class="bg-primary-500 hover:bg-primary-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition transform hover:scale-105 shadow-lg hover:shadow-xl text-center"
+                        class="bg-primary-500 hover:bg-primary-600 active:bg-primary-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition transform hover:scale-105 shadow-lg hover:shadow-xl text-center focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                        style="color: white !important;"
                       >
-                        Start Free Trial
+                        <span class="text-white">Start Free Trial</span>
                       </RouterLink>
                       <RouterLink
                         to="/courses"
-                        class="bg-white border-2 border-gray-300 text-gray-700 hover:border-primary-500 hover:text-primary-600 px-8 py-4 rounded-xl font-bold text-lg transition shadow-md hover:shadow-lg text-center"
+                        class="bg-white border-2 border-gray-300 text-gray-700 hover:border-primary-500 hover:text-primary-600 active:bg-gray-50 px-8 py-4 rounded-xl font-bold text-lg transition shadow-md hover:shadow-lg text-center focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
                       >
-                        Explore Courses
+                        <span>Explore Courses</span>
                       </RouterLink>
                     </div>
                   </div>
@@ -707,9 +708,10 @@ const getDurationText = (plan: ProcessedPlan) => {
         </p>
         <RouterLink
           to="/pricing"
-          class="bg-white text-primary-600 px-12 py-5 rounded-xl font-bold text-xl hover:bg-gray-100 transition transform hover:scale-105 shadow-2xl inline-block"
+          class="bg-white text-primary-600 px-12 py-5 rounded-xl font-bold text-xl hover:bg-gray-100 active:bg-gray-200 transition transform hover:scale-105 shadow-2xl inline-block focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
+          style="color: rgb(var(--color-primary-600)) !important;"
         >
-          Start Your Free Trial Today →
+          <span class="text-primary-600">Start Your Free Trial Today →</span>
         </RouterLink>
         <p class="mt-8 text-primary-100">
           No credit card required • Instant access • Cancel anytime
