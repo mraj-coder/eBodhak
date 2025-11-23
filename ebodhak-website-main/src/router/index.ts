@@ -46,6 +46,12 @@ const router = createRouter({
       component: () => import('../views/PricingView.vue'),
     },
     {
+      path: '/checkout/:planId',
+      name: 'checkout',
+      component: () => import('../views/CheckoutView.vue'),
+      props: true,
+    },
+    {
       path: '/contact',
       name: 'contact',
       component: () => import('../views/ContactView.vue'),

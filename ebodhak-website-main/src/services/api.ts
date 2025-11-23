@@ -1,4 +1,5 @@
 import type { CoursesResponse } from '@/types/course'
+import type { SubscriptionPlansResponse } from '@/types/subscription'
 import { mockCoursesResponse } from './mockData'
 
 // Use proxy in development, direct URL in production
@@ -54,6 +55,10 @@ class ApiService {
         courses: [course]
       }
     }
+  }
+
+  async getGlobalSubscriptionPlans(): Promise<SubscriptionPlansResponse> {
+    return this.fetch<SubscriptionPlansResponse>('/api/subscriptions/plans/global')
   }
 }
 

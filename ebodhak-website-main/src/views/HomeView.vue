@@ -1,8 +1,16 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
+import { apiService } from '@/services/api'
+import type { SubscriptionPlan } from '@/types/subscription'
 
 const router = useRouter()
+
+interface ProcessedPlan extends SubscriptionPlan {
+  parsedFeatures: string[]
+  numericPrice: number
+  numericEffectivePrice: number
+}
 
 // Hero Carousel
 const currentSlide = ref(0)
@@ -59,6 +67,7 @@ const resetAutoplay = () => {
 
 onMounted(() => {
   autoplayInterval = setInterval(nextSlide, 6000)
+  fetchSubscriptionPlans()
 })
 
 onUnmounted(() => {
@@ -203,59 +212,89 @@ const testimonials = [
   },
 ]
 
-// Pricing
-const pricingPlans = [
-  {
-    name: 'Basic',
-    price: 'Rs. 1,999',
-    period: '/month',
-    description: 'Perfect for beginners',
-    features: [
-      'Access to 50+ courses',
-      '1000+ practice questions',
-      'Recorded video lectures',
-      'Email support',
-      'Progress dashboard',
-      'Mobile app access',
-    ],
-    highlighted: false,
-  },
-  {
-    name: 'Premium',
-    price: 'Rs. 4,999',
-    period: '/month',
-    description: 'Most popular choice',
-    features: [
-      'Everything in Basic',
-      'Access to ALL courses',
-      '5000+ practice questions',
-      'Live classes & recordings',
-      'Weekly doubt sessions',
-      'Priority support',
-      'Performance analytics',
-      'Study materials PDFs',
-    ],
-    highlighted: true,
-  },
-  {
-    name: 'Ultimate',
-    price: 'Rs. 9,999',
-    period: '/month',
-    description: 'Complete learning package',
-    features: [
-      'Everything in Premium',
-      'Personal mentor assigned',
-      'Unlimited mock tests',
-      '10,000+ practice questions',
-      'One-on-one sessions',
-      '24/7 support',
-      'Career counseling',
-      'Lifetime course access',
-      'Interview preparation',
-    ],
-    highlighted: false,
-  },
-]
+// Pricing - Fetch from API
+const pricingPlans = ref<ProcessedPlan[]>([])
+const pricingLoading = ref(true)
+
+// Parse features from JSON string
+const parseFeatures = (featuresJson: string): string[] => {
+  try {
+    return JSON.parse(featuresJson)
+  } catch {
+    return []
+  }
+}
+
+// Fetch subscription plans from API
+const fetchSubscriptionPlans = async () => {
+  try {
+    pricingLoading.value = true
+    const response = await apiService.getGlobalSubscriptionPlans()
+    
+    if (response.success && response.data.plans) {
+      // Process and filter plans (exclude "Free Forever")
+      const allPlans = response.data.plans
+        .filter(plan => plan.slug !== 'free-forever')
+        .map(plan => ({
+          ...plan,
+          parsedFeatures: parseFeatures(plan.features),
+          numericPrice: parseFloat(plan.price),
+          numericEffectivePrice: parseFloat(plan.effective_price),
+        }))
+        .sort((a, b) => {
+          // Sort by duration: null (lifetime) goes last, others by duration
+          if (a.duration_months === null) return 1
+          if (b.duration_months === null) return -1
+          return a.duration_months - b.duration_months
+        })
+      
+      // Show 3 most relevant plans: 1 month, 6 months (popular), and 1 year
+      // Or if less plans available, show what we have
+      if (allPlans.length <= 3) {
+        pricingPlans.value = allPlans
+      } else {
+        // Try to get a good mix: shortest, popular/middle, and longest term
+        const selectedPlans = []
+        
+        // Get the popular plan first
+        const popularPlan = allPlans.find(p => p.is_popular)
+        if (popularPlan) selectedPlans.push(popularPlan)
+        
+        // Get shortest duration plan (if not already added)
+        const shortestPlan = allPlans.find(p => !selectedPlans.includes(p) && p.duration_months !== null)
+        if (shortestPlan) selectedPlans.push(shortestPlan)
+        
+        // Get longest duration plan (if not already added)
+        const longestPlan = [...allPlans].reverse().find(p => !selectedPlans.includes(p))
+        if (longestPlan) selectedPlans.push(longestPlan)
+        
+        // If we still need more, add remaining plans
+        while (selectedPlans.length < 3 && selectedPlans.length < allPlans.length) {
+          const nextPlan = allPlans.find(p => !selectedPlans.includes(p))
+          if (nextPlan) selectedPlans.push(nextPlan)
+          else break
+        }
+        
+        pricingPlans.value = selectedPlans
+      }
+    }
+  } catch (err) {
+    console.error('Error fetching subscription plans:', err)
+  } finally {
+    pricingLoading.value = false
+  }
+}
+
+const getPrice = (plan: ProcessedPlan) => {
+  return plan.numericEffectivePrice
+}
+
+const getDurationText = (plan: ProcessedPlan) => {
+  if (!plan.duration_months) return 'Lifetime'
+  if (plan.duration_months === 1) return '/month'
+  if (plan.duration_months === 12) return '/year'
+  return `/${plan.duration_months} months`
+}
 </script>
 
 <template>
@@ -526,34 +565,57 @@ const pricingPlans = [
             Choose the perfect plan that fits your learning goals and budget
           </p>
         </div>
-        <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <!-- Loading State -->
+        <div v-if="pricingLoading" class="text-center py-12">
+          <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-primary-500"></div>
+          <p class="mt-4 text-gray-600">Loading pricing plans...</p>
+        </div>
+
+        <!-- Pricing Plans Grid -->
+        <div v-else class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           <div
             v-for="plan in pricingPlans"
-            :key="plan.name"
+            :key="plan.id"
             :class="[
-              'rounded-3xl p-8 transition transform hover:scale-105 border-2',
-              plan.highlighted
+              'rounded-3xl p-8 transition transform hover:scale-105 border-2 flex flex-col',
+              plan.is_popular
                 ? 'bg-primary-50 border-primary-500 shadow-xl scale-105'
                 : 'bg-white border-gray-200 hover:border-primary-300 hover:shadow-lg',
             ]"
           >
-            <div v-if="plan.highlighted" class="text-center mb-4">
+            <div v-if="plan.is_popular" class="text-center mb-4 -mt-4">
               <span
-                class="bg-primary-500 text-white px-4 py-2 rounded-full text-sm font-bold uppercase shadow-lg"
+                class="bg-primary-500 text-white px-4 py-2 rounded-full text-sm font-bold uppercase shadow-lg inline-flex items-center gap-2"
               >
-                ⭐ Best Value
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                Most Popular
               </span>
             </div>
-            <h3 class="text-3xl font-bold mb-2 text-gray-900">{{ plan.name }}</h3>
-            <p class="text-gray-600 mb-6">
-              {{ plan.description }}
-            </p>
-            <div class="mb-6">
-              <span class="text-5xl font-bold text-gray-900">{{ plan.price }}</span>
-              <span class="text-gray-500">{{ plan.period }}</span>
+            <div class="text-center mb-6">
+              <h3 class="text-3xl font-bold mb-2 text-gray-900">{{ plan.name }}</h3>
+              <p class="text-gray-600 mb-6">
+                {{ plan.description }}
+              </p>
+              <div class="mb-4">
+                <div v-if="plan.discounted_price" class="mb-2">
+                  <span class="text-2xl text-gray-400 line-through">{{ plan.currency }} {{ parseFloat(plan.price).toLocaleString() }}</span>
+                </div>
+                <div>
+                  <span class="text-5xl font-bold text-gray-900">{{ plan.currency }} {{ getPrice(plan).toLocaleString() }}</span>
+                  <span class="text-gray-500 block mt-1">{{ getDurationText(plan) }}</span>
+                </div>
+                <div v-if="plan.discounted_price" class="mt-3">
+                  <span class="text-sm text-green-600 font-semibold bg-green-100 px-3 py-1 rounded-full inline-block">
+                    Save {{ plan.currency }} {{ (parseFloat(plan.price) - getPrice(plan)).toLocaleString() }}
+                  </span>
+                </div>
+              </div>
             </div>
-            <ul class="space-y-4 mb-8">
-              <li v-for="feature in plan.features" :key="feature" class="flex items-start gap-3">
+
+            <ul class="space-y-4 mb-8 flex-grow text-left">
+              <li v-for="feature in plan.parsedFeatures" :key="feature" class="flex items-start gap-3">
                 <svg
                   class="w-6 h-6 flex-shrink-0 text-primary-500"
                   fill="currentColor"
@@ -568,22 +630,21 @@ const pricingPlans = [
                 <span class="text-gray-700">{{ feature }}</span>
               </li>
             </ul>
-            <RouterLink
-              to="/pricing"
-              :class="[
-                'w-full py-4 rounded-xl font-bold text-lg transition shadow-md hover:shadow-lg text-center block',
-                plan.highlighted
-                  ? 'bg-primary-500 text-white hover:bg-primary-600'
-                  : 'bg-white border-2 border-gray-300 text-gray-700 hover:border-primary-500 hover:text-primary-600',
-              ]"
-            >
-              Get Started Now
-            </RouterLink>
+
+            <div class="mt-auto">
+              <RouterLink
+                to="/pricing"
+                class="block w-full py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-md hover:shadow-lg text-center bg-primary-500 text-white hover:bg-primary-600 active:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                style="color: white !important;"
+              >
+                <span class="text-white">Get Started Now</span>
+              </RouterLink>
+            </div>
           </div>
         </div>
         <div class="text-center mt-12">
-          <p class="text-gray-600 mb-4 flex items-center justify-center gap-6 flex-wrap">
-            <span class="flex items-center gap-2">
+          <div class="flex flex-wrap justify-center gap-8 text-gray-600 mb-6">
+            <div class="flex items-center gap-2">
               <svg class="w-5 h-5 text-primary-500" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fill-rule="evenodd"
@@ -591,9 +652,9 @@ const pricingPlans = [
                   clip-rule="evenodd"
                 />
               </svg>
-              7-day free trial
-            </span>
-            <span class="flex items-center gap-2">
+              <span>7-day money-back guarantee</span>
+            </div>
+            <div class="flex items-center gap-2">
               <svg class="w-5 h-5 text-primary-500" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fill-rule="evenodd"
@@ -601,9 +662,9 @@ const pricingPlans = [
                   clip-rule="evenodd"
                 />
               </svg>
-              Secure Khalti payment
-            </span>
-            <span class="flex items-center gap-2">
+              <span>Secure Khalti & eSewa payment</span>
+            </div>
+            <div class="flex items-center gap-2">
               <svg class="w-5 h-5 text-primary-500" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fill-rule="evenodd"
@@ -611,9 +672,28 @@ const pricingPlans = [
                   clip-rule="evenodd"
                 />
               </svg>
-              Cancel anytime
-            </span>
-          </p>
+              <span>Cancel anytime</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-primary-500" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <span>No hidden fees</span>
+            </div>
+          </div>
+          <RouterLink
+            to="/pricing"
+            class="text-primary-600 hover:text-primary-700 font-semibold text-lg inline-flex items-center gap-2 group"
+          >
+            View All Plans & Features
+            <svg class="w-5 h-5 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </RouterLink>
         </div>
       </div>
     </section>

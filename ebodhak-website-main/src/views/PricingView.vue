@@ -1,71 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { RouterLink } from 'vue-router'
+import { apiService } from '@/services/api'
+import type { SubscriptionPlan } from '@/types/subscription'
 
-const billingCycle = ref<'monthly' | 'annual'>('monthly')
+interface ProcessedPlan extends SubscriptionPlan {
+  parsedFeatures: string[]
+  numericPrice: number
+  numericEffectivePrice: number
+}
 
-const pricingPlans = [
-  {
-    name: 'Basic',
-    monthlyPrice: 1999,
-    annualPrice: 19990,
-    description: 'Perfect for beginners starting their learning journey',
-    features: [
-      'Access to 50+ courses',
-      '1000+ practice questions',
-      'Recorded video lectures',
-      'Email support',
-      'Progress dashboard',
-      'Mobile app access',
-      'Study materials PDFs',
-      'Community forum access',
-    ],
-    highlighted: false,
-    color: 'blue',
-  },
-  {
-    name: 'Premium',
-    monthlyPrice: 4999,
-    annualPrice: 49990,
-    description: 'Most popular choice for serious learners',
-    features: [
-      'Everything in Basic',
-      'Access to ALL 200+ courses',
-      '5000+ practice questions',
-      'Live classes & recordings',
-      'Weekly doubt sessions',
-      'Priority email & chat support',
-      'Performance analytics',
-      'Downloadable resources',
-      'Mock test series',
-      'Career guidance sessions',
-    ],
-    highlighted: true,
-    color: 'primary',
-  },
-  {
-    name: 'Ultimate',
-    monthlyPrice: 9999,
-    annualPrice: 99990,
-    description: 'Complete learning package with personal mentorship',
-    features: [
-      'Everything in Premium',
-      'Personal mentor assigned',
-      'Unlimited mock tests',
-      '10,000+ practice questions',
-      'One-on-one sessions (4/month)',
-      '24/7 priority support',
-      'Career counseling',
-      'Lifetime course access',
-      'Interview preparation',
-      'Resume review',
-      'Job placement assistance',
-      'Exclusive masterclasses',
-    ],
-    highlighted: false,
-    color: 'purple',
-  },
-]
+const pricingPlans = ref<ProcessedPlan[]>([])
+const loading = ref(true)
+const error = ref<string | null>(null)
 
 const faqs = [
   {
@@ -100,17 +47,132 @@ const faqs = [
   },
 ]
 
-const getPrice = (plan: typeof pricingPlans[0]) => {
-  return billingCycle.value === 'monthly' ? plan.monthlyPrice : plan.annualPrice
+// Parse features from JSON string
+const parseFeatures = (featuresJson: string): string[] => {
+  try {
+    return JSON.parse(featuresJson)
+  } catch {
+    return []
+  }
 }
 
-const getSavings = (plan: typeof pricingPlans[0]) => {
-  if (billingCycle.value === 'annual') {
-    const monthlyCost = plan.monthlyPrice * 12
-    return monthlyCost - plan.annualPrice
+// Fetch subscription plans from API
+const fetchSubscriptionPlans = async () => {
+  try {
+    loading.value = true
+    error.value = null
+    const response = await apiService.getGlobalSubscriptionPlans()
+    
+    if (response.success && response.data.plans) {
+      // Process and filter plans (exclude "Free Forever" from main pricing cards)
+      pricingPlans.value = response.data.plans
+        .filter(plan => plan.slug !== 'free-forever')
+        .map(plan => ({
+          ...plan,
+          parsedFeatures: parseFeatures(plan.features),
+          numericPrice: parseFloat(plan.price),
+          numericEffectivePrice: parseFloat(plan.effective_price),
+        }))
+        .sort((a, b) => {
+          // Sort by duration: null (lifetime) goes last, others by duration
+          if (a.duration_months === null) return 1
+          if (b.duration_months === null) return -1
+          return a.duration_months - b.duration_months
+        })
+    } else {
+      throw new Error('Failed to fetch subscription plans')
+    }
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : 'Failed to load pricing plans'
+    console.error('Error fetching subscription plans:', err)
+  } finally {
+    loading.value = false
+  }
+}
+
+const getPrice = (plan: ProcessedPlan) => {
+  return plan.numericEffectivePrice
+}
+
+const getSavings = (plan: ProcessedPlan) => {
+  if (plan.discounted_price) {
+    return plan.numericPrice - plan.numericEffectivePrice
   }
   return 0
 }
+
+const getDurationText = (plan: ProcessedPlan) => {
+  if (!plan.duration_months) return 'Lifetime'
+  if (plan.duration_months === 1) return '/month'
+  if (plan.duration_months === 12) return '/year'
+  return `/${plan.duration_months} months`
+}
+
+// Calculate max savings percentage from all plans
+const maxSavingsPercentage = computed(() => {
+  if (pricingPlans.value.length === 0) return 0
+  const savings = pricingPlans.value
+    .filter(plan => plan.discounted_price)
+    .map(plan => {
+      const discount = plan.numericPrice - plan.numericEffectivePrice
+      return Math.round((discount / plan.numericPrice) * 100)
+    })
+  return savings.length > 0 ? Math.max(...savings) : 0
+})
+
+// Key comparison features - manually curated for better readability
+const comparisonFeatures = [
+  { label: 'Duration', key: 'duration' },
+  { label: 'Full Access', key: 'full_access' },
+  { label: 'Practice & Mock Tests', key: 'practice_tests' },
+  { label: 'Analytics', key: 'analytics' },
+  { label: 'Priority Support', key: 'priority_support' },
+  { label: 'Certificate Eligibility', key: 'certificate' },
+  { label: 'Future Updates', key: 'future_updates' },
+]
+
+// Helper to check if plan has a feature
+const planHasFeature = (plan: ProcessedPlan, featureKey: string): string | boolean => {
+  const features = plan.parsedFeatures.map(f => f.toLowerCase())
+  
+  switch (featureKey) {
+    case 'duration':
+      if (plan.duration_months === null) return 'Lifetime'
+      if (plan.duration_months === 1) return '1 Month'
+      if (plan.duration_months === 3) return '3 Months'
+      if (plan.duration_months === 6) return '6 Months'
+      if (plan.duration_months === 12) return '12 Months'
+      return `${plan.duration_months} Months`
+    
+    case 'full_access':
+      return features.some(f => f.includes('full access') || f.includes('full content'))
+    
+    case 'practice_tests':
+      return features.some(f => f.includes('practice') || f.includes('mock test') || f.includes('unlimited'))
+    
+    case 'analytics':
+      if (features.some(f => f.includes('advanced analytics'))) return 'Advanced'
+      if (features.some(f => f.includes('full analytics'))) return 'Full'
+      return features.some(f => f.includes('analytics'))
+    
+    case 'priority_support':
+      if (features.some(f => f.includes('premium support'))) return 'Premium'
+      return features.some(f => f.includes('priority support'))
+    
+    case 'certificate':
+      return features.some(f => f.includes('certificate'))
+    
+    case 'future_updates':
+      return features.some(f => f.includes('future updates'))
+    
+    default:
+      return false
+  }
+}
+
+onMounted(() => {
+  fetchSubscriptionPlans()
+})
 </script>
 
 <template>
@@ -124,27 +186,10 @@ const getSavings = (plan: typeof pricingPlans[0]) => {
           and expert instructors.
         </p>
 
-        <!-- Billing Toggle -->
-        <div class="flex items-center justify-center gap-4 mb-8">
-          <span :class="billingCycle === 'monthly' ? 'text-white font-semibold' : 'text-primary-200'">
-            Monthly
-          </span>
-          <button
-            @click="billingCycle = billingCycle === 'monthly' ? 'annual' : 'monthly'"
-            class="relative w-16 h-8 bg-white bg-opacity-30 rounded-full transition"
-          >
-            <div
-              :class="[
-                'absolute top-1 w-6 h-6 bg-white rounded-full transition-all',
-                billingCycle === 'annual' ? 'left-9' : 'left-1',
-              ]"
-            ></div>
-          </button>
-          <span :class="billingCycle === 'annual' ? 'text-white font-semibold' : 'text-primary-200'">
-            Annual
-            <span class="ml-2 bg-yellow-400 text-gray-900 px-2 py-1 rounded-full text-xs font-bold">
-              Save 17%
-            </span>
+        <!-- Savings Badge -->
+        <div v-if="maxSavingsPercentage > 0" class="flex justify-center">
+          <span class="bg-yellow-400 text-gray-900 px-6 py-3 rounded-full text-sm font-bold shadow-lg">
+            💰 Save up to {{ maxSavingsPercentage }}% with longer plans
           </span>
         </div>
       </div>
@@ -153,18 +198,41 @@ const getSavings = (plan: typeof pricingPlans[0]) => {
     <!-- Pricing Cards -->
     <section class="py-20 bg-gray-50">
       <div class="container mx-auto px-4">
-        <div class="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <!-- Loading State -->
+        <div v-if="loading" class="text-center py-20">
+          <div class="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary-500"></div>
+          <p class="mt-4 text-gray-600 text-lg">Loading pricing plans...</p>
+        </div>
+
+        <!-- Error State -->
+        <div v-else-if="error" class="text-center py-20">
+          <div class="bg-red-50 border border-red-200 rounded-2xl p-8 max-w-md mx-auto">
+            <font-awesome-icon :icon="['fas', 'exclamation-circle']" class="text-red-500 text-5xl mb-4" />
+            <h3 class="text-xl font-bold text-red-900 mb-2">Failed to Load Pricing Plans</h3>
+            <p class="text-red-700 mb-6">{{ error }}</p>
+            <button
+              @click="fetchSubscriptionPlans"
+              class="bg-red-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-red-600 transition"
+            >
+              <font-awesome-icon :icon="['fas', 'redo']" class="mr-2" />
+              Try Again
+            </button>
+          </div>
+        </div>
+
+        <!-- Pricing Plans Grid -->
+        <div v-else class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-7xl mx-auto">
           <div
             v-for="plan in pricingPlans"
-            :key="plan.name"
+            :key="plan.id"
             :class="[
-              'rounded-3xl p-8 transition transform hover:scale-105 border-2',
-              plan.highlighted
+              'rounded-3xl p-8 transition transform hover:scale-105 border-2 flex flex-col',
+              plan.is_popular
                 ? 'bg-primary-50 border-primary-500 shadow-2xl scale-105 relative'
                 : 'bg-white border-gray-200 hover:border-primary-300 hover:shadow-xl',
             ]"
           >
-            <div v-if="plan.highlighted" class="absolute -top-4 left-1/2 -translate-x-1/2">
+            <div v-if="plan.is_popular" class="absolute -top-4 left-1/2 -translate-x-1/2">
               <span
                 class="bg-primary-500 text-white px-6 py-2 rounded-full text-sm font-bold uppercase shadow-lg flex items-center gap-2"
               >
@@ -173,43 +241,46 @@ const getSavings = (plan: typeof pricingPlans[0]) => {
               </span>
             </div>
 
-            <div class="text-center mb-8">
+            <div class="text-center mb-6">
               <h3 class="text-3xl font-bold mb-2 text-gray-900">{{ plan.name }}</h3>
               <p class="text-gray-600 mb-6">{{ plan.description }}</p>
 
               <div class="mb-4">
-                <span class="text-5xl font-bold text-gray-900">Rs. {{ getPrice(plan).toLocaleString() }}</span>
-                <span class="text-gray-500">{{ billingCycle === 'monthly' ? '/month' : '/year' }}</span>
+                <div v-if="plan.discounted_price" class="mb-2">
+                  <span class="text-2xl text-gray-400 line-through">{{ plan.currency }} {{ parseFloat(plan.price).toLocaleString() }}</span>
+                </div>
+                <div>
+                  <span class="text-5xl font-bold text-gray-900">{{ plan.currency }} {{ getPrice(plan).toLocaleString() }}</span>
+                  <span class="text-gray-500 block mt-1">{{ getDurationText(plan) }}</span>
+                </div>
               </div>
 
-              <div v-if="billingCycle === 'annual' && getSavings(plan) > 0" class="mb-6">
+              <div v-if="getSavings(plan) > 0" class="mb-6">
                 <span class="text-sm text-green-600 font-semibold bg-green-100 px-3 py-1 rounded-full">
-                  Save Rs. {{ getSavings(plan).toLocaleString() }} per year
+                  Save {{ plan.currency }} {{ getSavings(plan).toLocaleString() }}
                 </span>
               </div>
-
-              <RouterLink
-                to="/courses"
-                :class="[
-                  'w-full py-4 rounded-xl font-bold text-lg transition shadow-md hover:shadow-lg text-center block',
-                  plan.highlighted
-                    ? 'bg-primary-500 text-white hover:bg-primary-600 transform hover:scale-105'
-                    : 'bg-white border-2 border-gray-300 text-gray-700 hover:border-primary-500 hover:text-primary-600',
-                ]"
-              >
-                Get Started Now
-              </RouterLink>
             </div>
 
-            <div class="space-y-4">
+            <div class="space-y-4 mb-8 flex-grow text-left">
               <div
-                v-for="feature in plan.features"
+                v-for="feature in plan.parsedFeatures"
                 :key="feature"
                 class="flex items-start gap-3 text-gray-700"
               >
                 <font-awesome-icon :icon="['fas', 'check']" class="text-primary-500 mt-1 flex-shrink-0" />
                 <span>{{ feature }}</span>
               </div>
+            </div>
+
+            <div class="mt-auto">
+              <RouterLink
+                :to="{ name: 'checkout', params: { planId: plan.id } }"
+                class="block w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 shadow-md hover:shadow-lg text-center bg-primary-500 text-white hover:bg-primary-600 active:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                style="color: white !important;"
+              >
+                <span class="text-white">Get Started Now</span>
+              </RouterLink>
             </div>
           </div>
         </div>
@@ -239,78 +310,107 @@ const getSavings = (plan: typeof pricingPlans[0]) => {
     </section>
 
     <!-- Feature Comparison -->
-    <section class="py-20 bg-white">
+    <section v-if="!loading && !error && pricingPlans.length > 0" class="py-20 bg-white">
       <div class="container mx-auto px-4">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Compare Plans</h2>
-          <p class="text-xl text-gray-600">See what's included in each plan</p>
+          <p class="text-xl text-gray-600">Key differences at a glance</p>
         </div>
 
-        <div class="max-w-5xl mx-auto overflow-x-auto">
-          <table class="w-full border-collapse">
+        <div class="max-w-6xl mx-auto overflow-x-auto">
+          <table class="w-full border-collapse bg-white rounded-2xl overflow-hidden shadow-lg">
             <thead>
-              <tr class="border-b-2 border-gray-200">
-                <th class="text-left py-4 px-6 font-semibold text-gray-900">Features</th>
-                <th class="text-center py-4 px-6 font-semibold text-gray-900">Basic</th>
-                <th class="text-center py-4 px-6 font-semibold text-primary-600 bg-primary-50">Premium</th>
-                <th class="text-center py-4 px-6 font-semibold text-gray-900">Ultimate</th>
+              <tr class="border-b-2 border-gray-200 bg-gray-50">
+                <th class="text-left py-5 px-6 font-bold text-gray-900 sticky left-0 bg-gray-50 z-10">Features</th>
+                <th 
+                  v-for="plan in pricingPlans" 
+                  :key="plan.id"
+                  :class="[
+                    'text-center py-5 px-4 font-bold min-w-[140px]',
+                    plan.is_popular ? 'text-white bg-primary-500' : 'text-gray-900 bg-gray-50'
+                  ]"
+                >
+                  <div class="flex flex-col items-center gap-1">
+                    <span>{{ plan.name }}</span>
+                    <span v-if="plan.is_popular" class="text-xs font-normal opacity-90">Most Popular</span>
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody>
-              <tr class="border-b border-gray-200">
-                <td class="py-4 px-6 text-gray-700">Number of Courses</td>
-                <td class="text-center py-4 px-6">50+</td>
-                <td class="text-center py-4 px-6 bg-primary-50 font-semibold">200+</td>
-                <td class="text-center py-4 px-6 font-semibold">200+</td>
-              </tr>
-              <tr class="border-b border-gray-200">
-                <td class="py-4 px-6 text-gray-700">Practice Questions</td>
-                <td class="text-center py-4 px-6">1,000+</td>
-                <td class="text-center py-4 px-6 bg-primary-50 font-semibold">5,000+</td>
-                <td class="text-center py-4 px-6 font-semibold">10,000+</td>
-              </tr>
-              <tr class="border-b border-gray-200">
-                <td class="py-4 px-6 text-gray-700">Live Classes</td>
-                <td class="text-center py-4 px-6">
-                  <font-awesome-icon :icon="['fas', 'check']" class="text-gray-300" />
-                </td>
-                <td class="text-center py-4 px-6 bg-primary-50">
-                  <font-awesome-icon :icon="['fas', 'check']" class="text-primary-500" />
-                </td>
-                <td class="text-center py-4 px-6">
-                  <font-awesome-icon :icon="['fas', 'check']" class="text-primary-500" />
+              <!-- Price Row -->
+              <tr class="border-b border-gray-200 bg-gradient-to-r from-primary-50 to-transparent">
+                <td class="py-5 px-6 text-gray-900 font-bold sticky left-0 bg-white">Price</td>
+                <td 
+                  v-for="plan in pricingPlans" 
+                  :key="`price-${plan.id}`"
+                  :class="[
+                    'text-center py-5 px-4',
+                    plan.is_popular ? 'bg-primary-50' : ''
+                  ]"
+                >
+                  <div>
+                    <div v-if="plan.discounted_price" class="text-xs text-gray-400 line-through mb-1">
+                      {{ plan.currency }} {{ parseFloat(plan.price).toLocaleString() }}
+                    </div>
+                    <div class="font-bold text-xl text-primary-600">
+                      {{ plan.currency }} {{ getPrice(plan).toLocaleString() }}
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">{{ getDurationText(plan) }}</div>
+                  </div>
                 </td>
               </tr>
-              <tr class="border-b border-gray-200">
-                <td class="py-4 px-6 text-gray-700">Personal Mentor</td>
-                <td class="text-center py-4 px-6">
-                  <font-awesome-icon :icon="['fas', 'check']" class="text-gray-300" />
+
+              <!-- Key Features Rows -->
+              <tr 
+                v-for="(feature, index) in comparisonFeatures" 
+                :key="`feature-${index}`"
+                :class="[
+                  'border-b border-gray-100',
+                  index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+                ]"
+              >
+                <td class="py-4 px-6 text-gray-700 font-medium sticky left-0 z-10" :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
+                  {{ feature.label }}
                 </td>
-                <td class="text-center py-4 px-6 bg-primary-50">
-                  <font-awesome-icon :icon="['fas', 'check']" class="text-gray-300" />
+                <td 
+                  v-for="plan in pricingPlans" 
+                  :key="`${plan.id}-${index}`"
+                  :class="[
+                    'text-center py-4 px-4',
+                    plan.is_popular && index % 2 === 0 ? 'bg-primary-50/30' : '',
+                    plan.is_popular && index % 2 !== 0 ? 'bg-primary-50/50' : ''
+                  ]"
+                >
+                  <template v-if="typeof planHasFeature(plan, feature.key) === 'string'">
+                    <span class="text-gray-900 font-semibold text-sm">
+                      {{ planHasFeature(plan, feature.key) }}
+                    </span>
+                  </template>
+                  <template v-else>
+                    <font-awesome-icon 
+                      v-if="planHasFeature(plan, feature.key)"
+                      :icon="['fas', 'check']" 
+                      class="text-green-500 text-lg"
+                    />
+                    <span 
+                      v-else
+                      class="text-gray-300 text-lg"
+                    >
+                      ✕
+                    </span>
+                  </template>
                 </td>
-                <td class="text-center py-4 px-6">
-                  <font-awesome-icon :icon="['fas', 'check']" class="text-primary-500" />
-                </td>
-              </tr>
-              <tr class="border-b border-gray-200">
-                <td class="py-4 px-6 text-gray-700">One-on-One Sessions</td>
-                <td class="text-center py-4 px-6">
-                  <font-awesome-icon :icon="['fas', 'check']" class="text-gray-300" />
-                </td>
-                <td class="text-center py-4 px-6 bg-primary-50">
-                  <font-awesome-icon :icon="['fas', 'check']" class="text-gray-300" />
-                </td>
-                <td class="text-center py-4 px-6 font-semibold">4/month</td>
-              </tr>
-              <tr class="border-b border-gray-200">
-                <td class="py-4 px-6 text-gray-700">Support</td>
-                <td class="text-center py-4 px-6">Email</td>
-                <td class="text-center py-4 px-6 bg-primary-50 font-semibold">Priority</td>
-                <td class="text-center py-4 px-6 font-semibold">24/7</td>
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <!-- View Full Features Link -->
+        <div class="text-center mt-8">
+          <p class="text-gray-600">
+            Want to see all features? Check out the detailed feature list in each plan card above.
+          </p>
         </div>
       </div>
     </section>
