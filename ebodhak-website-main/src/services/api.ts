@@ -2,8 +2,10 @@ import type { CoursesResponse } from '@/types/course'
 import type { SubscriptionPlansResponse } from '@/types/subscription'
 import { mockCoursesResponse } from './mockData'
 
-// Use proxy in development, direct URL in production
-const BASE_URL = import.meta.env.DEV ? '' : 'https://ebodhakapi.factbills.com'
+// Use environment variable for API base URL
+// In development, uses empty string for Vite proxy
+// In production, uses the configured API URL
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://ebodhakapi.factbills.com'
 
 // Set to true to use mock data (for development when API is unavailable)
 const USE_MOCK_DATA = false
