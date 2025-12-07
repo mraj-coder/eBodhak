@@ -104,6 +104,12 @@ const router = createRouter({
       component: () => import('../views/BlogView.vue'),
     },
     {
+      path: '/blog/:slug',
+      name: 'blog-detail',
+      component: () => import('../views/BlogDetailView.vue'),
+      props: true,
+    },
+    {
       path: '/materials',
       name: 'materials',
       component: () => import('../views/ComingSoonView.vue'),

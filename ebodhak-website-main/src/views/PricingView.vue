@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { apiService } from '@/services/api'
 import type { SubscriptionPlan } from '@/types/subscription'
+import PremiumCTA from '@/components/common/PremiumCTA.vue'
 
 interface ProcessedPlan extends SubscriptionPlan {
   parsedFeatures: string[]
@@ -178,9 +179,9 @@ onMounted(() => {
 <template>
   <div class="pricing-page">
     <!-- Hero Section -->
-    <section class="bg-gradient-to-br from-primary-500 to-primary-600 text-white py-20">
+    <section class="bg-compact-hero-pattern text-white py-16">
       <div class="container mx-auto px-4 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold mb-6">Choose Your Perfect Plan</h1>
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 animate-fade-in-down text-shadow-lg">Choose Your Perfect Plan</h1>
         <p class="text-xl text-primary-100 mb-8 max-w-3xl mx-auto">
           Invest in your future with our affordable pricing plans. All plans include access to quality courses
           and expert instructors.
@@ -188,8 +189,9 @@ onMounted(() => {
 
         <!-- Savings Badge -->
         <div v-if="maxSavingsPercentage > 0" class="flex justify-center">
-          <span class="bg-yellow-400 text-gray-900 px-6 py-3 rounded-full text-sm font-bold shadow-lg">
-            💰 Save up to {{ maxSavingsPercentage }}% with longer plans
+          <span class="bg-yellow-400 text-gray-900 px-6 py-3 rounded-full text-sm font-bold shadow-lg inline-flex items-center gap-2">
+            <font-awesome-icon :icon="['fas', 'bolt']" />
+            Save up to {{ maxSavingsPercentage }}% with longer plans
           </span>
         </div>
       </div>
@@ -310,7 +312,14 @@ onMounted(() => {
     </section>
 
     <!-- Feature Comparison -->
-    <section v-if="!loading && !error && pricingPlans.length > 0" class="py-20 bg-white">
+    <section v-if="!loading && !error && pricingPlans.length > 0" class="py-20 bg-white relative overflow-hidden">
+      <div class="absolute inset-0 opacity-5">
+        <img 
+          src="https://images.pexels.com/photos/6684499/pexels-photo-6684499.jpeg" 
+          alt="Background pattern"
+          class="w-full h-full object-cover"
+        />
+      </div>
       <div class="container mx-auto px-4">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Compare Plans</h2>
@@ -461,29 +470,12 @@ onMounted(() => {
     </section>
 
     <!-- Final CTA -->
-    <section class="py-20 bg-gradient-to-br from-primary-500 to-primary-600 text-white">
-      <div class="container mx-auto px-4 text-center">
-        <h2 class="text-3xl md:text-4xl font-bold mb-6">Still Have Questions?</h2>
-        <p class="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
-          Our team is here to help you choose the right plan for your learning goals
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <RouterLink
-            to="/contact"
-            class="bg-white text-primary-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition transform hover:scale-105 shadow-lg"
-          >
-            <font-awesome-icon :icon="['fas', 'headset']" class="mr-2" />
-            Contact Support
-          </RouterLink>
-          <RouterLink
-            to="/contact"
-            class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-primary-600 transition"
-          >
-            <font-awesome-icon :icon="['fas', 'calendar']" class="mr-2" />
-            Schedule a Call
-          </RouterLink>
-        </div>
-      </div>
-    </section>
+    <PremiumCTA
+      title="Still Have Questions?"
+      subtitle="Our team is here to help you choose the right plan for your learning goals"
+      buttonText="Contact Support"
+      buttonLink="/contact"
+      benefits="Expert guidance • Personalized recommendations • Instant support"
+    />
   </div>
 </template>

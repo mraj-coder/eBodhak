@@ -1,4 +1,5 @@
 import type { CoursesResponse } from '@/types/course'
+import type { SubscriptionPlansResponse } from '@/types/subscription'
 
 // Type definitions for mock data
 export interface Instructor {
@@ -332,3 +333,108 @@ export const mockLiveClasses: LiveClass[] = [
     status: 'completed',
   },
 ]
+
+// Mock Subscription Plans
+export const mockSubscriptionPlans: SubscriptionPlansResponse = {
+  success: true,
+  message: 'Subscription plans retrieved successfully (MOCK DATA)',
+  data: {
+    plans: [
+      {
+        id: 1,
+        name: 'Monthly Plan',
+        slug: 'monthly-plan',
+        description: 'Perfect for short-term preparation',
+        price: '1999.00',
+        discounted_price: null,
+        effective_price: '1999.00',
+        discount_percentage: null,
+        duration_months: 1,
+        features: JSON.stringify([
+          'Full access to all courses',
+          '1000+ practice questions',
+          'Email support',
+          'Basic analytics',
+          'Mobile app access',
+          'Certificate eligibility'
+        ]),
+        is_popular: false,
+        currency: 'NPR'
+      },
+      {
+        id: 2,
+        name: '6 Months Plan',
+        slug: '6-months-plan',
+        description: 'Most popular choice for exam preparation',
+        price: '9999.00',
+        discounted_price: '7499.00',
+        effective_price: '7499.00',
+        discount_percentage: 25,
+        duration_months: 6,
+        features: JSON.stringify([
+          'Full access to all courses',
+          'Unlimited practice questions',
+          'Priority email support',
+          'Full analytics dashboard',
+          'Mobile app access',
+          'Certificate eligibility',
+          'Live doubt sessions',
+          'Future updates included'
+        ]),
+        is_popular: true,
+        currency: 'NPR'
+      },
+      {
+        id: 3,
+        name: 'Annual Plan',
+        slug: 'annual-plan',
+        description: 'Best value for comprehensive preparation',
+        price: '17999.00',
+        discounted_price: '11999.00',
+        effective_price: '11999.00',
+        discount_percentage: 33,
+        duration_months: 12,
+        features: JSON.stringify([
+          'Full access to all courses',
+          'Unlimited practice questions',
+          'Premium 24/7 support',
+          'Advanced analytics dashboard',
+          'Mobile app access',
+          'Certificate eligibility',
+          'Live doubt sessions',
+          'Future updates included',
+          'Personalized mentorship',
+          'Career guidance'
+        ]),
+        is_popular: false,
+        currency: 'NPR'
+      },
+      {
+        id: 4,
+        name: 'Lifetime Access',
+        slug: 'lifetime-plan',
+        description: 'One-time payment for unlimited access',
+        price: '29999.00',
+        discounted_price: '24999.00',
+        effective_price: '24999.00',
+        discount_percentage: 17,
+        duration_months: null,
+        features: JSON.stringify([
+          'Lifetime access to all courses',
+          'Unlimited practice questions',
+          'Premium 24/7 support',
+          'Advanced analytics dashboard',
+          'Mobile app access',
+          'Certificate eligibility',
+          'Live doubt sessions',
+          'All future updates',
+          'Personalized mentorship',
+          'Career guidance',
+          'Priority course access'
+        ]),
+        is_popular: false,
+        currency: 'NPR'
+      }
+    ]
+  }
+}

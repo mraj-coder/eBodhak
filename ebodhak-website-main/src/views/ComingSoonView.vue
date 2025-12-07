@@ -13,12 +13,14 @@ const props = withDefaults(defineProps<Props>(), {
 
 <template>
   <div class="coming-soon-page">
-    <section class="min-h-screen bg-gradient-to-br from-primary-500 to-primary-600 text-white flex items-center justify-center py-20">
+    <section class="min-h-screen bg-hero-pattern text-white flex items-center justify-center py-20">
       <div class="container mx-auto px-4 text-center">
         <div class="max-w-3xl mx-auto">
-          <div class="text-8xl mb-8">🚀</div>
-          <h1 class="text-4xl md:text-6xl font-bold mb-6">{{ title }}</h1>
-          <p class="text-xl md:text-2xl text-primary-100 mb-12">
+          <div class="w-32 h-32 mx-auto mb-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl flex items-center justify-center shadow-2xl animate-float">
+            <font-awesome-icon :icon="['fas', 'rocket']" class="text-6xl text-white" />
+          </div>
+          <h1 class="text-4xl md:text-6xl font-bold mb-6 animate-fade-in-down text-shadow-lg">{{ title }}</h1>
+          <p class="text-xl md:text-2xl mb-12 animate-fade-in-up animation-delay-200 text-shadow-md">
             {{ description }}
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">

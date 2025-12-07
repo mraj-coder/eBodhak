@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { RouterLink } from 'vue-router'
+import PremiumCTA from '@/components/common/PremiumCTA.vue'
 
 const expandedFaq = ref<number | null>(null)
 
@@ -78,9 +80,9 @@ const faqCategories = [
 <template>
   <div class="faq-page">
     <!-- Hero Section -->
-    <section class="bg-gradient-to-br from-primary-500 to-primary-600 text-white py-20">
+    <section class="bg-compact-hero-pattern text-white py-16">
       <div class="container mx-auto px-4 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold mb-6">Frequently Asked Questions</h1>
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 animate-fade-in-down text-shadow-lg">Frequently Asked Questions</h1>
         <p class="text-xl text-primary-100 max-w-3xl mx-auto">
           Find answers to common questions about Ebodhak, our courses, and services
         </p>
@@ -88,7 +90,14 @@ const faqCategories = [
     </section>
 
     <!-- FAQ Content -->
-    <section class="py-20 bg-gray-50">
+    <section class="py-20 bg-gray-50 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-5">
+        <img 
+          src="https://images.pexels.com/photos/5940837/pexels-photo-5940837.jpeg" 
+          alt="Background pattern"
+          class="w-full h-full object-cover"
+        />
+      </div>
       <div class="container mx-auto px-4 max-w-4xl">
         <div v-for="(category, categoryIndex) in faqCategories" :key="categoryIndex" class="mb-12">
           <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
@@ -121,20 +130,16 @@ const faqCategories = [
           </div>
         </div>
 
-        <!-- Still Have Questions -->
-        <div class="bg-white rounded-2xl p-8 border border-gray-200 text-center mt-12">
-          <h3 class="text-2xl font-bold text-gray-900 mb-4">Still have questions?</h3>
-          <p class="text-gray-600 mb-6">
-            Can't find the answer you're looking for? Our support team is here to help.
-          </p>
-          <RouterLink
-            to="/contact"
-            class="inline-block bg-primary-500 hover:bg-primary-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition transform hover:scale-105"
-          >
-            Contact Support
-          </RouterLink>
-        </div>
       </div>
     </section>
+
+    <!-- CTA Section -->
+    <PremiumCTA
+      title="Still Have Questions?"
+      subtitle="Can't find the answer you're looking for? Our support team is here to help"
+      buttonText="Contact Support"
+      buttonLink="/contact"
+      benefits="Instant help • Expert answers • 24/7 support"
+    />
   </div>
 </template>
