@@ -140,7 +140,7 @@ const footerLinks = {
       <!-- Bottom Bar -->
       <div class="footer-bottom">
         <p class="copyright">
-          © {{ currentYear }} Ebodhak. All rights reserved. | Made by Abhishek in Nepal
+          © {{ currentYear }} Ebodhak. All rights reserved. 
         </p>
       </div>
     </div>
