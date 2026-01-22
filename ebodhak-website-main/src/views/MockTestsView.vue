@@ -91,10 +91,10 @@ const filteredTests = computed(() => {
 <template>
   <div class="mock-tests-page">
     <!-- Hero Section -->
-    <section class="relative bg-gradient-to-br from-primary-500 to-primary-600 text-white py-20">
+    <section class="bg-hero-pattern text-white py-20">
       <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto text-center">
-          <h1 class="text-4xl md:text-5xl font-bold mb-6">Practice Mock Tests</h1>
+          <h1 class="text-4xl md:text-5xl font-bold mb-6 animate-fade-in-down text-shadow-lg">Practice Mock Tests</h1>
           <p class="text-xl text-primary-100 mb-8">
             Test your knowledge with our comprehensive mock exams and track your progress
           </p>

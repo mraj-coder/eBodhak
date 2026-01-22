@@ -5,9 +5,9 @@ const lastUpdated = 'January 15, 2025'
 <template>
   <div class="terms-page">
     <!-- Hero Section -->
-    <section class="bg-gradient-to-br from-primary-500 to-primary-600 text-white py-20">
+    <section class="bg-hero-pattern text-white py-20">
       <div class="container mx-auto px-4 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold mb-6">Terms & Conditions</h1>
+        <h1 class="text-4xl md:text-5xl font-bold mb-6 animate-fade-in-down text-shadow-lg">Terms & Conditions</h1>
         <p class="text-xl text-primary-100">Last updated: {{ lastUpdated }}</p>
       </div>
     </section>

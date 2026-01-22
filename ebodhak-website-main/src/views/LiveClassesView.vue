@@ -58,9 +58,9 @@ const formatTime = (dateString: string) => {
 <template>
   <div class="live-classes-page bg-gray-50 min-h-screen">
     <!-- Hero Section -->
-    <section class="bg-gradient-to-br from-primary-500 to-primary-600 text-white py-16">
+    <section class="bg-compact-hero-pattern text-white py-16">
       <div class="container mx-auto px-4">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">Live Classes</h1>
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 animate-fade-in-down text-shadow-lg">Live Classes</h1>
         <p class="text-xl text-primary-100 max-w-3xl mb-8">
           Join interactive live sessions with expert instructors and learn in real-time
         </p>

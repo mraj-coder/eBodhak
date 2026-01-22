@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
+import PremiumCTA from '@/components/common/PremiumCTA.vue'
 
 const searchQuery = ref('')
 
@@ -56,10 +57,10 @@ const popularArticles = [
 <template>
   <div class="help-page">
     <!-- Hero Section -->
-    <section class="bg-gradient-to-br from-primary-500 to-primary-600 text-white py-20">
+    <section class="bg-hero-pattern text-white py-20">
       <div class="container mx-auto px-4 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold mb-6">How Can We Help?</h1>
-        <p class="text-xl text-primary-100 mb-8 max-w-3xl mx-auto">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6 animate-fade-in-down text-shadow-lg">How Can We Help?</h1>
+        <p class="text-xl mb-8 max-w-3xl mx-auto animate-fade-in-up animation-delay-200 text-shadow-md">
           Search our help center or browse by category
         </p>
         <div class="max-w-2xl mx-auto">
@@ -121,29 +122,12 @@ const popularArticles = [
     </section>
 
     <!-- Contact Support -->
-    <section class="py-20 bg-gray-50">
-      <div class="container mx-auto px-4 text-center max-w-3xl">
-        <h2 class="text-3xl font-bold text-gray-900 mb-4">Still Need Help?</h2>
-        <p class="text-xl text-gray-600 mb-8">
-          Can't find what you're looking for? Our support team is here to assist you.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <RouterLink
-            to="/contact"
-            class="bg-primary-500 hover:bg-primary-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition transform hover:scale-105"
-          >
-            <font-awesome-icon :icon="['fas', 'headset']" class="mr-2" />
-            Contact Support
-          </RouterLink>
-          <RouterLink
-            to="/faq"
-            class="bg-white border-2 border-gray-300 text-gray-700 hover:border-primary-500 hover:text-primary-600 px-8 py-4 rounded-xl font-bold text-lg transition"
-          >
-            <font-awesome-icon :icon="['fas', 'question-circle']" class="mr-2" />
-            View FAQ
-          </RouterLink>
-        </div>
-      </div>
-    </section>
+    <PremiumCTA
+      title="Still Need Help?"
+      subtitle="Can't find what you're looking for? Our support team is here to assist you"
+      buttonText="Contact Support"
+      buttonLink="/contact"
+      benefits="24/7 availability • Quick response • Expert assistance"
+    />
   </div>
 </template>

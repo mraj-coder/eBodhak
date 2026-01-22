@@ -3,6 +3,8 @@ import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { apiService } from '@/services/api'
 import type { SubscriptionPlan } from '@/types/subscription'
+import PremiumCTA from '@/components/common/PremiumCTA.vue'
+import FieldCard from '@/components/common/FieldCard.vue'
 
 const router = useRouter()
 
@@ -22,8 +24,9 @@ const heroSlides = [
     subtitle: 'Engineering • Medical • Management • IT',
     description:
       'Comprehensive e-learning platform for all competitive exams and professional courses',
-    badge: '🎓 15+ Fields of Study',
-    bgGradient: 'from-primary-50 to-blue-50',
+    badge: '15+ Fields of Study',
+    badgeIcon: 'graduation-cap',
+    bgGradient: 'from-gray-50 to-white',
     image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=800&fit=crop&q=80',
     imageAlt: 'Students collaborating and learning together in a modern educational environment',
   },
@@ -31,7 +34,8 @@ const heroSlides = [
     title: 'Learn at Your Own Pace',
     subtitle: 'Anytime, Anywhere Access',
     description: 'Live classes, recorded sessions, and unlimited practice materials available 24/7',
-    badge: '📱 Multi-Device Learning',
+    badge: 'Multi-Device Learning',
+    badgeIcon: 'mobile-alt',
     bgGradient: 'from-purple-50 to-pink-50',
     image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=800&fit=crop&q=80',
     imageAlt: 'Student studying online with laptop and notes in a comfortable learning environment',
@@ -40,7 +44,8 @@ const heroSlides = [
     title: 'Expert-Led Instruction',
     subtitle: '50+ Industry Professionals',
     description: 'Learn from experienced educators and industry experts with proven track records',
-    badge: '👨‍🏫 Top 1% Educators',
+    badge: 'Top 1% Educators',
+    badgeIcon: 'user-graduate',
     bgGradient: 'from-orange-50 to-yellow-50',
     image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&h=800&fit=crop&q=80',
     imageAlt: 'Professional instructor teaching in a modern classroom with engaged students',
@@ -78,102 +83,122 @@ onUnmounted(() => {
 const categories = [
   {
     name: 'Engineering (IOE, BE)',
-    icon: '⚙️',
+    icon: 'cog',
     courses: 25,
     students: '5,200+',
-    color: 'bg-blue-500',
+    category: 'Engineering',
+    image: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop&q=80',
   },
-  { name: 'Medical (MBBS, BDS)', icon: '🩺', courses: 18, students: '3,800+', color: 'bg-red-500' },
+  { 
+    name: 'Medical (MBBS, BDS)', 
+    icon: 'stethoscope', 
+    courses: 18, 
+    students: '3,800+',
+    category: 'Medical',
+    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=300&fit=crop&q=80',
+  },
   {
     name: 'Management (MBA, BBA)',
-    icon: '💼',
+    icon: 'briefcase',
     courses: 22,
     students: '4,100+',
-    color: 'bg-purple-500',
+    category: 'Management',
+    image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=300&fit=crop&q=80',
   },
   {
     name: 'Science & Technology',
-    icon: '🔬',
+    icon: 'flask',
     courses: 30,
     students: '6,500+',
-    color: 'bg-teal-500',
+    category: 'Science',
+    image: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=400&h=300&fit=crop&q=80',
   },
   {
     name: 'IT & Computer Science',
-    icon: '💻',
+    icon: 'laptop-code',
     courses: 35,
     students: '7,200+',
-    color: 'bg-indigo-500',
+    category: 'IT',
+    image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=300&fit=crop&q=80',
   },
   {
     name: 'Banking & Government',
-    icon: '🏛️',
+    icon: 'landmark',
     courses: 20,
     students: '3,200+',
-    color: 'bg-green-500',
+    category: 'Banking',
+    image: 'https://images.unsplash.com/photo-1541354329998-f4d9a9f9297f?w=400&h=300&fit=crop&q=80',
   },
 ]
 
 // Features data
 const features = [
   {
-    icon: '📚',
+    icon: 'book',
     title: 'Comprehensive Curriculum',
     description:
       'Expertly crafted content for Engineering, Medical, Management, IT and all competitive exams',
     gradient: 'from-blue-500 to-blue-600',
+    illustration: '/illustrations/education-interest.svg',
   },
   {
-    icon: '🎥',
+    icon: 'video',
     title: 'HD Video Lectures',
     description: 'Crystal clear video content with interactive whiteboards and detailed animations',
     gradient: 'from-purple-500 to-purple-600',
+    illustration: '/illustrations/video-gopro.svg',
   },
   {
-    icon: '📝',
+    icon: 'clipboard-list',
     title: 'Practice & Mock Tests',
     description:
       '10,000+ questions with detailed solutions and comprehensive performance analytics',
     gradient: 'from-primary-500 to-primary-600',
+    illustration: '/illustrations/online-exams.svg',
   },
   {
-    icon: '👥',
+    icon: 'users',
     title: 'Live Doubt Sessions',
     description: 'Real-time interaction with expert instructors for instant doubt resolution',
     gradient: 'from-pink-500 to-pink-600',
+    illustration: 'https://pixabay.com/get/gcc5fe6558f498bd669d008e9c4d6f90639938d573be4ff7be138067a0d5e0bf90a954a222a16e63786a04469c474f110.svg',
   },
   {
-    icon: '📊',
+    icon: 'chart-line',
     title: 'Progress Tracking',
     description: 'Advanced analytics dashboard to monitor your learning journey and improvements',
     gradient: 'from-indigo-500 to-indigo-600',
+    illustration: 'https://pixabay.com/get/g0afab2aee735f670d2e28b3d80304197968b879256ad1c4480d98ae77b208ae94ec94597b8f7d9fa60c6f80959a108c1.svg',
   },
   {
-    icon: '💬',
+    icon: 'comments',
     title: 'Study Communities',
     description: 'Collaborate with peers through forums, group discussions and study sessions',
     gradient: 'from-teal-500 to-teal-600',
+    illustration: '/illustrations/phone-comment.svg',
   },
   {
-    icon: '📱',
+    icon: 'mobile-alt',
     title: 'Mobile Learning',
     description: 'Learn on the go with our mobile-friendly platform and dedicated apps',
     gradient: 'from-cyan-500 to-cyan-600',
+    illustration: '/illustrations/app-development.svg',
   },
   {
-    icon: '🏆',
+    icon: 'trophy',
     title: 'Certificates',
     description: 'Earn recognized certificates and showcase your achievements professionally',
     gradient: 'from-orange-500 to-orange-600',
+    illustration: '/illustrations/success-trophy.svg',
   },
 ]
 
 // Statistics
 const stats = [
-  { number: '15,000+', label: 'Active Students', icon: '👥' },
-  { number: '96%', label: 'Success Rate', icon: '📈' },
-  { number: '50+', label: 'Expert Instructors', icon: '👨‍🏫' },
-  { number: '200+', label: 'Total Courses', icon: '📚' },
+  { number: '15,000+', label: 'Active Students', icon: 'users' },
+  { number: '96%', label: 'Success Rate', icon: 'chart-line' },
+  { number: '50+', label: 'Expert Instructors', icon: 'user-graduate' },
+  { number: '200+', label: 'Total Courses', icon: 'book' },
 ]
 
 // Testimonials
@@ -181,7 +206,7 @@ const testimonials = [
   {
     name: 'Abhishek Jha',
     role: 'IOE Entrance Rank 5',
-    image: '👨‍🎓',
+    image: 'https://i.pravatar.cc/150?u=abhishek1',
     content:
       'The structured approach and quality content helped me crack IOE with flying colors. The mock tests were exactly like the real exam!',
     rating: 5,
@@ -189,7 +214,7 @@ const testimonials = [
   {
     name: 'Abhishek Jha',
     role: 'MBBS Student',
-    image: '👩‍⚕️',
+    image: 'https://i.pravatar.cc/150?u=abhishek2',
     content:
       'Ebodhak made medical entrance preparation so much easier. The biology section is incredibly detailed and well-explained.',
     rating: 5,
@@ -197,7 +222,7 @@ const testimonials = [
   {
     name: 'Abhishek Jha',
     role: 'BBA Graduate',
-    image: '👨‍💼',
+    image: 'https://i.pravatar.cc/150?u=abhishek3',
     content:
       'Best decision I made for my career! The management courses are practical and industry-relevant. Highly recommended!',
     rating: 5,
@@ -205,7 +230,7 @@ const testimonials = [
   {
     name: 'Abhishek Jha',
     role: 'Computer Science Student',
-    image: '👩‍💻',
+    image: 'https://i.pravatar.cc/150?u=abhishek4',
     content:
       'The programming courses are top-notch. Real-world projects and coding exercises helped me build a strong portfolio.',
     rating: 5,
@@ -316,13 +341,14 @@ const getDurationText = (plan: ProcessedPlan) => {
                   <div class="max-w-3xl">
                     <div class="mb-6">
                       <span
-                        class="bg-primary-500 text-white px-6 py-3 rounded-full text-sm font-semibold shadow-lg"
+                        class="bg-primary-500 text-white px-6 py-3 rounded-full text-sm font-semibold shadow-lg inline-flex items-center gap-2"
                       >
+                        <font-awesome-icon :icon="['fas', slide.badgeIcon]" />
                         {{ slide.badge }}
                       </span>
                     </div>
                     <h1
-                      class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight text-gray-900"
+                      class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight text-gray-900 animate-fade-in-down"
                     >
                       {{ slide.title }}
                     </h1>
@@ -368,14 +394,14 @@ const getDurationText = (plan: ProcessedPlan) => {
                       />
                       
                       <!-- Floating decorative elements -->
-                      <div class="absolute -top-6 -right-6 w-20 h-20 bg-white rounded-2xl shadow-xl flex items-center justify-center text-4xl animate-float-icon z-20">
-                        📚
+                      <div class="absolute -top-6 -right-6 w-20 h-20 bg-white rounded-2xl shadow-xl flex items-center justify-center animate-float-icon z-20">
+                        <font-awesome-icon :icon="['fas', 'book']" class="text-4xl text-primary-500" />
                       </div>
-                      <div class="absolute -bottom-6 -left-6 w-16 h-16 bg-white rounded-2xl shadow-xl flex items-center justify-center text-3xl animate-float-icon z-20" style="animation-delay: 1s">
-                        🎓
+                      <div class="absolute -bottom-6 -left-6 w-16 h-16 bg-white rounded-2xl shadow-xl flex items-center justify-center animate-float-icon z-20" style="animation-delay: 1s">
+                        <font-awesome-icon :icon="['fas', 'graduation-cap']" class="text-3xl text-primary-600" />
                       </div>
-                      <div class="absolute top-1/4 -left-8 w-14 h-14 bg-white rounded-2xl shadow-xl flex items-center justify-center text-2xl animate-float-icon z-20" style="animation-delay: 2s">
-                        💡
+                      <div class="absolute top-1/4 -left-8 w-14 h-14 bg-white rounded-2xl shadow-xl flex items-center justify-center animate-float-icon z-20" style="animation-delay: 2s">
+                        <font-awesome-icon :icon="['fas', 'lightbulb']" class="text-2xl text-yellow-500" />
                       </div>
                     </div>
                   </div>
@@ -433,7 +459,9 @@ const getDurationText = (plan: ProcessedPlan) => {
       <div class="container mx-auto px-4">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div v-for="stat in stats" :key="stat.label" class="text-center">
-            <div class="text-5xl mb-3">{{ stat.icon }}</div>
+            <div class="mb-3">
+              <font-awesome-icon :icon="['fas', stat.icon]" class="text-5xl text-primary-500" />
+            </div>
             <p class="text-4xl md:text-5xl font-bold mb-2 text-primary-600">{{ stat.number }}</p>
             <p class="text-gray-600 font-medium">{{ stat.label }}</p>
           </div>
@@ -451,38 +479,29 @@ const getDurationText = (plan: ProcessedPlan) => {
           </p>
         </div>
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <RouterLink
+          <FieldCard
             v-for="category in categories"
             :key="category.name"
-            :to="`/courses?category=${encodeURIComponent(category.name)}`"
-            class="bg-white rounded-2xl p-8 border border-gray-200 hover:border-primary-300 hover:shadow-xl transition transform hover:-translate-y-1 cursor-pointer group"
-          >
-            <div
-              class="w-16 h-16 bg-primary-50 rounded-2xl flex items-center justify-center text-3xl mb-4 group-hover:bg-primary-100 transition"
-            >
-              {{ category.icon }}
-            </div>
-            <h3
-              class="text-2xl font-bold text-gray-900 mb-2 group-hover:text-primary-600 transition"
-            >
-              {{ category.name }}
-            </h3>
-            <p class="text-gray-600 mb-4">{{ category.courses }} Courses Available</p>
-            <div class="flex items-center gap-2 text-sm text-gray-500">
-              <svg class="w-5 h-5 text-primary-500" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
-                />
-              </svg>
-              <span>{{ category.students }} Students</span>
-            </div>
-          </RouterLink>
+            :name="category.name"
+            :icon="category.icon"
+            :courses="category.courses"
+            :students="category.students"
+            :category="category.category"
+            :image="category.image"
+          />
         </div>
       </div>
     </section>
 
     <!-- Features Grid -->
-    <section class="py-20 bg-white">
+    <section class="py-20 bg-white relative overflow-hidden">
+      <div class="absolute inset-0 opacity-5">
+        <img 
+          src="https://images.pexels.com/photos/5940715/pexels-photo-5940715.jpeg" 
+          alt="Background pattern"
+          class="w-full h-full object-cover"
+        />
+      </div>
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
           <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -495,19 +514,29 @@ const getDurationText = (plan: ProcessedPlan) => {
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <div v-for="feature in features" :key="feature.title" class="group">
             <div
-              class="bg-white rounded-2xl p-8 border border-gray-200 hover:border-primary-200 hover:shadow-lg transition-all transform hover:-translate-y-1 h-full"
+              class="bg-white rounded-3xl p-8 border-2 border-gray-100 hover:border-primary-300 hover:shadow-2xl transition-all transform hover:-translate-y-2 h-full relative overflow-hidden"
             >
-              <div
-                class="w-14 h-14 bg-primary-50 rounded-xl flex items-center justify-center text-3xl mb-4 group-hover:bg-primary-100 group-hover:scale-110 transition-all"
-              >
-                {{ feature.icon }}
+              <!-- 3D Illustration -->
+              <div class="flex justify-center mb-6">
+                <div class="w-48 h-48 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <img 
+                    :src="feature.illustration" 
+                    :alt="feature.title"
+                    class="w-full h-full object-contain"
+                    style="width: 192px; height: 192px;"
+                  />
+                </div>
               </div>
-              <h3
-                class="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition"
-              >
-                {{ feature.title }}
-              </h3>
-              <p class="text-gray-600 leading-relaxed">{{ feature.description }}</p>
+              
+              <!-- Content -->
+              <div class="text-center">
+                <h3
+                  class="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition"
+                >
+                  {{ feature.title }}
+                </h3>
+                <p class="text-gray-600 leading-relaxed">{{ feature.description }}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -544,7 +573,7 @@ const getDurationText = (plan: ProcessedPlan) => {
             </div>
             <p class="text-gray-700 mb-6 italic">"{{ testimonial.content }}"</p>
             <div class="flex items-center gap-3">
-              <div class="text-4xl">{{ testimonial.image }}</div>
+              <img :src="testimonial.image" :alt="testimonial.name" class="w-12 h-12 rounded-full object-cover" />
               <div>
                 <p class="font-bold text-gray-900">{{ testimonial.name }}</p>
                 <p class="text-sm text-gray-600">{{ testimonial.role }}</p>
@@ -700,24 +729,7 @@ const getDurationText = (plan: ProcessedPlan) => {
     </section>
 
     <!-- Final CTA -->
-    <section class="py-24 bg-gradient-to-br from-primary-500 to-primary-600 text-white">
-      <div class="container mx-auto px-4 text-center">
-        <h2 class="text-4xl md:text-6xl font-bold mb-6">Ready to Transform Your Future?</h2>
-        <p class="text-xl md:text-2xl mb-10 max-w-3xl mx-auto">
-          Join 15,000+ students already learning and succeeding with Ebodhak
-        </p>
-        <RouterLink
-          to="/pricing"
-          class="bg-white text-primary-600 px-12 py-5 rounded-xl font-bold text-xl hover:bg-gray-100 active:bg-gray-200 transition transform hover:scale-105 shadow-2xl inline-block focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
-          style="color: rgb(var(--color-primary-600)) !important;"
-        >
-          <span class="text-primary-600">Start Your Free Trial Today →</span>
-        </RouterLink>
-        <p class="mt-8 text-primary-100">
-          No credit card required • Instant access • Cancel anytime
-        </p>
-      </div>
-    </section>
+    <PremiumCTA />
   </div>
 </template>
 

@@ -19,9 +19,9 @@ const handleSubmit = () => {
 <template>
   <div class="contact-page">
     <!-- Hero Section -->
-    <section class="bg-gradient-to-br from-primary-500 to-primary-600 text-white py-20">
+    <section class="bg-compact-hero-pattern text-white py-16">
       <div class="container mx-auto px-4 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold mb-6">Get in Touch</h1>
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 animate-fade-in-down text-shadow-lg">Get in Touch</h1>
         <p class="text-xl text-primary-100 max-w-3xl mx-auto">
           Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
         </p>
@@ -29,7 +29,14 @@ const handleSubmit = () => {
     </section>
 
     <!-- Contact Content -->
-    <section class="py-20 bg-gray-50">
+    <section class="py-20 bg-gray-50 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-5">
+        <img 
+          src="https://images.pexels.com/photos/6684499/pexels-photo-6684499.jpeg" 
+          alt="Background pattern"
+          class="w-full h-full object-cover"
+        />
+      </div>
       <div class="container mx-auto px-4">
         <div class="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
           <!-- Contact Form -->
@@ -179,7 +186,7 @@ const handleSubmit = () => {
               </div>
             </div>
 
-            <div class="bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl p-8 text-white">
+            <div class="bg-newsletter-pattern rounded-2xl p-8 text-white">
               <div class="flex items-center gap-3 mb-4">
                 <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
                   <font-awesome-icon :icon="['fas', 'comments']" class="text-2xl" />

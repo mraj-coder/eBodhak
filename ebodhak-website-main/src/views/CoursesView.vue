@@ -82,10 +82,10 @@ onMounted(() => {
 <template>
   <div class="courses-page">
     <!-- Hero Section -->
-    <section class="relative bg-gradient-to-br from-primary-500 to-primary-600 text-white py-20">
+    <section class="bg-compact-hero-pattern text-white py-16">
       <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto text-center">
-          <h1 class="text-4xl md:text-5xl font-bold mb-6">Explore Our Courses</h1>
+          <h1 class="text-4xl md:text-5xl font-bold mb-4 animate-fade-in-down text-shadow-lg">Explore Our Courses</h1>
           <p class="text-xl text-primary-100 mb-8">
             Choose from {{ courses.length }}+ expert-led courses across Engineering, Medical,
             Management, IT, and more

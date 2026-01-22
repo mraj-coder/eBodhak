@@ -122,3 +122,183 @@ To complete the subscription flow:
 3. Add subscription purchase endpoint
 4. Create user subscription management page
 5. Add subscription status checks for protected content
+
+---
+
+## Blog API Integration
+
+### Endpoints
+
+#### Get All Blogs (List with Pagination)
+```
+GET https://ebodhakapi.factbills.com/api/blogs
+GET https://ebodhakapi.factbills.com/api/blogs?page=1
+```
+
+Returns a paginated list of all blog posts.
+
+#### Get Blog by Slug
+```
+GET https://ebodhakapi.factbills.com/api/blogs/{slug}
+```
+
+Example:
+```
+GET https://ebodhakapi.factbills.com/api/blogs/how-subscriptions-unlock-full-potential
+```
+
+Returns a single blog post by its slug.
+
+### Integration Details
+
+#### 1. Type Definitions
+Created in `src/types/blog.ts`:
+- `BlogAuthor`: Defines the author structure
+- `BlogPost`: Defines the structure of a blog post
+- `BlogsResponse`: Defines the API response structure
+
+#### 2. API Service
+Updated `src/services/api.ts`:
+- Added `getAllBlogs()` method (currently using mock data)
+- Added `getBlogBySlug(slug)` method for fetching individual blogs
+- Uses the existing fetch wrapper with proper error handling
+- Supports proxy in development mode
+
+#### 3. Component Integration
+
+**BlogView.vue** (`src/views/BlogView.vue`):
+- Fetches list of blogs on component mount
+- Shows loading state while fetching
+- Shows error state with retry button if API fails
+- Supports search and category filtering
+- Displays featured posts separately
+- Click on any post navigates to detail page
+
+**BlogDetailView.vue** (`src/views/BlogDetailView.vue`):
+- Fetches individual blog by slug from route params
+- Shows loading state while fetching
+- Shows error state if blog not found
+- Displays full blog content with proper formatting
+- Includes share buttons and CTA section
+- Back button to return to blog list
+
+#### 4. Router Configuration
+Added routes in `src/router/index.ts`:
+- `/blog` - Blog list page
+- `/blog/:slug` - Individual blog detail page
+
+### API Response Structure
+
+#### List Response (GET /api/blogs)
+```typescript
+{
+  data: [
+    {
+      id: number
+      title: string
+      slug: string
+      summary: string
+      content: string
+      author: {
+        id: number
+        name: string
+      }
+      featured_image: string | null
+      views: string | number  // Can be string from API
+      is_featured: boolean
+      published_at: string
+      created_at: string
+      updated_at: string
+    }
+  ],
+  links: {
+    first: string
+    last: string
+    prev: string | null
+    next: string | null
+  },
+  meta: {
+    current_page: number
+    from: number
+    last_page: number
+    path: string
+    per_page: number
+    to: number
+    total: number
+  }
+}
+```
+
+#### Detail Response (GET /api/blogs/{slug})
+```typescript
+{
+  data: {
+    id: number
+    title: string
+    slug: string
+    summary: string
+    content: string
+    author: {
+      id: number
+      name: string
+    }
+    featured_image: string | null
+    views: string | number  // Can be string from API
+    is_featured: boolean
+    published_at: string
+    created_at: string
+    updated_at: string
+  }
+}
+```
+
+### Current Status
+
+**✅ Using Real API**: The blog integration is now fully connected to the real API:
+- List endpoint (`/api/blogs`) is working with pagination support
+- Detail endpoint (`/api/blogs/{slug}`) is working
+- Views field is normalized from string to number for consistency
+- All blog data is fetched from the live API
+
+### Testing
+
+1. Start the development server:
+```bash
+npm run dev
+```
+
+2. Navigate to the blog page:
+```
+http://localhost:5174/blog
+```
+
+3. The page should:
+   - Show a loading spinner initially
+   - Display list of blog posts (currently mock data)
+   - Allow searching and filtering
+   - Show featured posts in a separate section
+   - Navigate to detail page on click
+
+4. Click on any blog post to view details:
+```
+http://localhost:5174/blog/{slug}
+```
+
+### Features
+
+- **Pagination Support**: The API returns paginated results (10 per page by default)
+- **Search & Filter**: Client-side search and filtering on fetched blog posts
+- **Featured Posts**: Posts with `is_featured: true` are displayed prominently
+- **Dynamic Routing**: Each blog post has its own detail page at `/blog/{slug}`
+- **View Count**: Displays view count for each blog post
+- **Author Information**: Shows author name and avatar
+- **Responsive Design**: Works on all device sizes
+
+### Error Handling
+
+The integration includes comprehensive error handling:
+- Network errors are caught and displayed to the user
+- Users can retry failed requests with a button
+- Console logs provide debugging information
+- Fallback UI ensures the page doesn't break on error
+- Mock data provides a working demo until API is ready

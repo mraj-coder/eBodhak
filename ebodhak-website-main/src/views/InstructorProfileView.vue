@@ -20,7 +20,7 @@ const activeTab = ref<'about' | 'courses' | 'reviews'>('about')
 <template>
   <div class="instructor-profile-page bg-gray-50 min-h-screen">
     <!-- Hero Section -->
-    <section class="bg-gradient-to-br from-primary-500 to-primary-600 text-white py-16">
+    <section class="bg-compact-hero-pattern text-white py-16">
       <div class="container mx-auto px-4">
         <div class="flex flex-col md:flex-row items-center gap-8">
           <!-- Instructor Image -->
