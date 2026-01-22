@@ -279,7 +279,7 @@ const fetchSubscriptionPlans = async () => {
         pricingPlans.value = allPlans
       } else {
         // Try to get a good mix: shortest, popular/middle, and longest term
-        const selectedPlans = []
+        const selectedPlans: typeof allPlans = []
         
         // Get the popular plan first
         const popularPlan = allPlans.find(p => p.is_popular)

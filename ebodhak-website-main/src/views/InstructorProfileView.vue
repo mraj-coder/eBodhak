@@ -8,7 +8,7 @@ const instructorId = computed(() => Number(route.params.id))
 
 // Find instructor by ID
 const instructor = computed(() => {
-  return mockInstructors.find(i => i.id === instructorId.value) || mockInstructors[0]
+  return mockInstructors.find(i => i.id === instructorId.value) || mockInstructors[0]!
 })
 
 // Mock courses taught by this instructor
